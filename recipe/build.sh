@@ -29,9 +29,9 @@ make install
 # Install kernelspec
 cd $SRC_DIR/tools/Jupyter/kernel/
 python $SRC_DIR/tools/Jupyter/kernel/setup.py install
-cp -r $PREFIX\share\cling\Jupyter\kernel\cling-c++11 $PREFIX\share\cling\Jupyter\kernel\cling-cpp11 
-cp -r $PREFIX\share\cling\Jupyter\kernel\cling-c++14 $PREFIX\share\cling\Jupyter\kernel\cling-cpp14 
-cp -r $PREFIX\share\cling\Jupyter\kernel\cling-c++17 $PREFIX\share\cling\Jupyter\kernel\cling-cpp17 
+cp -r $PREFIX/share/cling/Jupyter/kernel/cling-c++11 $PREFIX/share/cling/Jupyter/kernel/cling-cpp11 
+cp -r $PREFIX/share/cling/Jupyter/kernel/cling-c++14 $PREFIX/share/cling/Jupyter/kernel/cling-cpp14 
+cp -r $PREFIX/share/cling/Jupyter/kernel/cling-c++17 $PREFIX/share/cling/Jupyter/kernel/cling-cpp17 
 jupyter kernelspec install $PREFIX/share/cling/Jupyter/kernel/cling-cpp11 --sys-prefix
 jupyter kernelspec install $PREFIX/share/cling/Jupyter/kernel/cling-cpp14 --sys-prefix
 jupyter kernelspec install $PREFIX/share/cling/Jupyter/kernel/cling-cpp17 --sys-prefix
