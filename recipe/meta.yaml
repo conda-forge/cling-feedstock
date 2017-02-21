@@ -2,7 +2,7 @@
 {% set version = "0.3.post" %}
 {% set commit = "efd446871cfb077189bf3df7fbbad58de51ff7fa" %}
 {% set sha256 = "b1c3eed7614c14e2bd092c3c237527eacaf0445358b5c236bb4fa73bbd1a4bb0" %}
-{% set build_number = "0" %}
+{% set build_number = "1" %}
 {% set llvm_version = "3.9.1" %}
 
 package:
@@ -19,10 +19,10 @@ source:
 build:
   number: {{ build_number }}
   string: {{ build_number }}
-  skip: true  # [win]
-
+  skip: true  # [(win and py<35) or (win and py36)]
   features:
     - cling
+    - vc14  # [win]
 
 requirements:
   build:
@@ -32,24 +32,25 @@ requirements:
     - cling-patches
     - llvmdev =={{ llvm_version }}
     - clangdev =={{ llvm_version }}
-    - libcxx =={{ llvm_version }}
+    - vc 14  # [win]
+    - libcxx =={{ llvm_version }}  # [not win]
     - jupyter_client  # required for the installation of the kernel spec.
  
   run:
     - cling-patches
     - llvmdev =={{ llvm_version }}
     - clangdev =={{ llvm_version }}
-    - libcxx =={{ llvm_version }}
+    - libcxx =={{ llvm_version }}  # [not win]
     - vs2015_runtime  # [win]
 
 test:
   commands:
-    - test -f ${PREFIX}/share/jupyter/kernels/cling-c++11/kernel.json  # [unix]
-    - test -f ${PREFIX}/share/jupyter/kernels/cling-c++14/kernel.json  # [unix]
-    - test -f ${PREFIX}/share/jupyter/kernels/cling-c++17/kernel.json  # [unix]
-    - if exist %LIBRARY_PREFIX%\share\jupyter\kernels\cling-c++11\kernel.json (exit 0) else (exit 1)  # [win]
-    - if exist %LIBRARY_PREFIX%\share\jupyter\kernels\cling-c++14\kernel.json (exit 0) else (exit 1)  # [win]
-    - if exist %LIBRARY_PREFIX%\share\jupyter\kernels\cling-c++17\kernel.json (exit 0) else (exit 1)  # [win]
+    - test -f ${PREFIX}/share/jupyter/kernels/cling-cpp11/kernel.json  # [unix]
+    - test -f ${PREFIX}/share/jupyter/kernels/cling-cpp14/kernel.json  # [unix]
+    - test -f ${PREFIX}/share/jupyter/kernels/cling-cpp17/kernel.json  # [unix]
+    - if exist %PREFIX%\share\jupyter\kernels\cling-cpp11\kernel.json (exit 0) else (exit 1)  # [win]
+    - if exist %PREFIX%\share\jupyter\kernels\cling-cpp14\kernel.json (exit 0) else (exit 1)  # [win]
+    - if exist %PREFIX%\share\jupyter\kernels\cling-cpp17\kernel.json (exit 0) else (exit 1)  # [win]
 
 about:
   home: https://root.cern.ch/cling
