@@ -18,7 +18,6 @@ source:
 
 build:
   number: {{ build_number }}
-  string: {{ build_number }}
   skip: true  # [(win and py<35) or (win and py36)]
   features:
     - cling
