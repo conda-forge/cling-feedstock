@@ -2,7 +2,7 @@
 {% set version = "0.3.post" %}
 {% set commit = "efd446871cfb077189bf3df7fbbad58de51ff7fa" %}
 {% set sha256 = "b1c3eed7614c14e2bd092c3c237527eacaf0445358b5c236bb4fa73bbd1a4bb0" %}
-{% set build_number = "1" %}
+{% set build_number = "2" %}
 {% set llvm_version = "3.9.1" %}
 
 package:
@@ -37,6 +37,7 @@ requirements:
     - jupyter_client  # required for the installation of the kernel spec.
  
   run:
+    - python          # cling includes a python package (cling-kernel) - must be recognized as a Python package.
     - cling-patches
     - llvmdev =={{ llvm_version }}
     - clangdev =={{ llvm_version }}
