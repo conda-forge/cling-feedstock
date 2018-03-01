@@ -1,5 +1,5 @@
 {% set name = "cling" %}
-{% set version = "0.3.post" %}
+{% set version = "0.5" %}
 {% set commit = "efd446871cfb077189bf3df7fbbad58de51ff7fa" %}
 {% set sha256 = "b1c3eed7614c14e2bd092c3c237527eacaf0445358b5c236bb4fa73bbd1a4bb0" %}
 {% set build_number = "2" %}
@@ -17,7 +17,7 @@ source:
     - 0001-conda-patch.patch 
 
 build:
-  number: {{ build_number }}
+  number: 0
   skip: true  # [(win and py<35) or (win and py36)]
   features:
     - cling
