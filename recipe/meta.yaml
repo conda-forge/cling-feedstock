@@ -14,27 +14,27 @@ source:
   url: https://github.com/root-mirror/cling/archive/{{ commit }}.tar.gz
   sha256: {{ sha256 }}
   patches:
-    - 0001-conda-patch.patch 
+    - 0001-conda-patch.patch
 
 build:
   number: {{ build_number }}
   skip: true  # [(win and py<35) or (win and py36)]
   features:
     - cling
-    - vc14  # [win]
 
 requirements:
   build:
-    - python          # required for the installation of the kernel spec.
-    - toolchain
     - cmake
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+  host:
+    - python          # required for the installation of the kernel spec.
     - cling-patches
     - llvmdev =={{ llvm_version }}
     - clangdev =={{ llvm_version }}
-    - vc 14  # [win]
     - libcxx =={{ llvm_version }}  # [not win]
     - jupyter_client  # required for the installation of the kernel spec.
- 
+
   run:
     - python          # cling includes a python package (cling-kernel) - must be recognized as a Python package.
     - cling-patches
