@@ -1,0 +1,25 @@
+From c513776350f213f71dc5eec4d37d9e41b0a1c2ea Mon Sep 17 00:00:00 2001
+From: Vassil Vassilev <v.g.vassilev@gmail.com>
+Date: Mon, 13 Nov 2017 23:45:35 +0100
+Subject: [PATCH 24/27] Fix typo, we want to suppress diag not enable it.
+
+---
+ lib/Interpreter/CIFactory.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/Interpreter/CIFactory.cpp b/lib/Interpreter/CIFactory.cpp
+index 27c69d63..ec754393 100644
+--- a/lib/Interpreter/CIFactory.cpp
++++ b/lib/Interpreter/CIFactory.cpp
+@@ -824,7 +824,7 @@ static void stringifyPreprocSetting(PreprocessorOptions& PPOpts,
+       // Disable the warning when we import a module in a function body. This
+       // is a ROOT-specific issue tracked by ROOT-9088.
+       // FIXME: Remove after merging ROOT's PR1306.
+-      argvCompile.push_back("-Wmodules-import-nested-redundant");
++      argvCompile.push_back("-Wno-modules-import-nested-redundant");
+ 
+     }
+ 
+-- 
+2.14.1
+

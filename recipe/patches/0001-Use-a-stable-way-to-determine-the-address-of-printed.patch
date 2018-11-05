@@ -1,0 +1,104 @@
+From 01dbb6d9d523675694da95927eace14535c3040f Mon Sep 17 00:00:00 2001
+From: Vassil Vassilev <v.g.vassilev@gmail.com>
+Date: Thu, 8 Mar 2018 10:19:19 +0100
+Subject: [PATCH] Use a stable way to determine the address of printed objects.
+
+Using unary operator address of (eg. MyClass m; &m) takes into account
+overloaded operators which may not give us the precide address of the
+allocated storage.
+
+This patch teaches cling to use std::addressof instead.
+---
+ lib/Interpreter/ValueExtractionSynthesizer.cpp | 26 +++++++++++++++++++-------
+ lib/Interpreter/ValueExtractionSynthesizer.h   |  4 ++++
+ test/Prompt/ValuePrinter/Regression.C          |  8 ++++++++
+ 3 files changed, 31 insertions(+), 7 deletions(-)
+
+diff --git a/lib/Interpreter/ValueExtractionSynthesizer.cpp b/lib/Interpreter/ValueExtractionSynthesizer.cpp
+index 9245ff2..14dcd51 100644
+--- a/lib/Interpreter/ValueExtractionSynthesizer.cpp
++++ b/lib/Interpreter/ValueExtractionSynthesizer.cpp
+@@ -346,8 +346,13 @@ namespace {
+       }
+       else if (desugaredTy->isReferenceType()) {
+         // we need to get the address of the references
+-        Expr* AddrOfE = m_Sema->BuildUnaryOp(/*Scope*/0, noLoc, UO_AddrOf,
+-                                             E).get();
++        Expr* AddrOfE = nullptr;
++        if (m_UnresolvedStdAddressOf)
++          AddrOfE = m_Sema->ActOnCallExpr(/*Scope*/0, m_UnresolvedStdAddressOf,
++                                          locStart, E, locEnd).get();
++        else
++          AddrOfE = m_Sema->BuildUnaryOp(/*Scope*/0, noLoc, UO_AddrOf,
++                                         E).get();
+         CallArgs.push_back(AddrOfE);
+       }
+       else if (desugaredTy->isAnyPointerType()) {
+@@ -398,21 +403,28 @@ namespace {
+   void ValueExtractionSynthesizer::FindAndCacheRuntimeDecls() {
+     assert(!m_gClingVD && "Called multiple times!?");
+     DeclContext* NSD = m_Context->getTranslationUnitDecl();
++    LookupResult R(*m_Sema, &m_Context->Idents.get("addressof"),
++                   SourceLocation(), Sema::LookupOrdinaryName,
++                   Sema::ForRedeclaration);
++    CXXScopeSpec CSS;
+     if (m_Sema->getLangOpts().CPlusPlus) {
+       NSD = utils::Lookup::Namespace(m_Sema, "cling");
+       NSD = utils::Lookup::Namespace(m_Sema, "runtime", NSD);
+       m_gClingVD = cast<VarDecl>(utils::Lookup::Named(m_Sema, "gCling", NSD));
+-      NSD = utils::Lookup::Namespace(m_Sema, "internal",NSD);
++      NSD = utils::Lookup::Namespace(m_Sema, "internal", NSD);
++
++      m_Sema->LookupQualifiedName(R, m_Sema->getStdNamespace());
++      assert(!R.empty() && "Cannot find std::addressof");
++      m_UnresolvedStdAddressOf
++        = m_Sema->BuildDeclarationNameExpr(CSS, R, /*ADL*/ false).get();
+     }
+-    LookupResult R(*m_Sema, &m_Context->Idents.get("setValueNoAlloc"),
+-                   SourceLocation(), Sema::LookupOrdinaryName,
+-                   Sema::ForRedeclaration);
+ 
++    R.clear();
++    R.setLookupName(&m_Context->Idents.get("setValueNoAlloc"));
+     m_Sema->LookupQualifiedName(R, NSD);
+     assert(!R.empty()
+            && "Cannot find cling::runtime::internal::setValueNoAlloc");
+ 
+-    CXXScopeSpec CSS;
+     m_UnresolvedNoAlloc
+       = m_Sema->BuildDeclarationNameExpr(CSS, R, /*ADL*/ false).get();
+ 
+diff --git a/lib/Interpreter/ValueExtractionSynthesizer.h b/lib/Interpreter/ValueExtractionSynthesizer.h
+index f57562b..c1ff06a 100644
+--- a/lib/Interpreter/ValueExtractionSynthesizer.h
++++ b/lib/Interpreter/ValueExtractionSynthesizer.h
+@@ -45,6 +45,10 @@ namespace cling {
+     ///
+     clang::Expr* m_UnresolvedCopyArray;
+ 
++    ///\brief std::addressof cache.
++    ///
++    clang::Expr* m_UnresolvedStdAddressOf;
++
+     bool m_isChildInterpreter;
+ 
+ public:
+diff --git a/test/Prompt/ValuePrinter/Regression.C b/test/Prompt/ValuePrinter/Regression.C
+index 899b5d1..66e87c4 100644
+--- a/test/Prompt/ValuePrinter/Regression.C
++++ b/test/Prompt/ValuePrinter/Regression.C
+@@ -107,3 +107,11 @@ void f(std::string) {}
+ f // CHECK: (void (*)(std::string)) Function @0x{{[0-9a-f]+}}
+ // CHECK: at input_line_{{[0-9].*}}:1:
+ // CHECK: void f(std::string) {}
++
++class notapointer {};
++struct OverloadedAddrOf {
++  notapointer operator&() {
++    return notapointer();
++  }
++};
++OverloadedAddrOf overloadedAddrOf
+-- 
+2.5.3
+

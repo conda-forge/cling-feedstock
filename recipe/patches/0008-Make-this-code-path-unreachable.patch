@@ -1,0 +1,25 @@
+From 8bfa1b52c6ae4e24b88cead3782d168365f43f37 Mon Sep 17 00:00:00 2001
+From: Vassil Vassilev <v.g.vassilev@gmail.com>
+Date: Wed, 18 Oct 2017 17:25:20 +0200
+Subject: [PATCH 08/27] Make this code path unreachable.
+
+If we cannot return an address we should assert and handle the diags.
+---
+ lib/Interpreter/IncrementalJIT.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lib/Interpreter/IncrementalJIT.cpp b/lib/Interpreter/IncrementalJIT.cpp
+index 9e413fc0..33c88207 100644
+--- a/lib/Interpreter/IncrementalJIT.cpp
++++ b/lib/Interpreter/IncrementalJIT.cpp
+@@ -229,6 +229,7 @@ public:
+         .getAddress())
+       return *Addr;
+ 
++    llvm_unreachable("Handle the error case");
+     return ~0U;
+   }
+ 
+-- 
+2.14.1
+

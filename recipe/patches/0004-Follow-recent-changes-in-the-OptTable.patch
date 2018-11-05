@@ -1,0 +1,97 @@
+From 16c99f41f6c7773a4d813918c0fb66eb76b6d2e5 Mon Sep 17 00:00:00 2001
+From: Vassil Vassilev <v.g.vassilev@gmail.com>
+Date: Thu, 12 Oct 2017 15:39:07 +0200
+Subject: [PATCH 04/27] Follow recent changes in the OptTable.
+
+LLVM 5.0 introduces a field to describe possible allowed option values. This
+aids the auto completion machanisms.
+---
+ include/cling/Interpreter/ClingOptions.h   |  2 +-
+ include/cling/Interpreter/ClingOptions.inc | 24 ++++++++++++------------
+ lib/Interpreter/InvocationOptions.cpp      |  6 +++---
+ 3 files changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/include/cling/Interpreter/ClingOptions.h b/include/cling/Interpreter/ClingOptions.h
+index 513218e4..13da700e 100644
+--- a/include/cling/Interpreter/ClingOptions.h
++++ b/include/cling/Interpreter/ClingOptions.h
+@@ -17,7 +17,7 @@ namespace clingoptions {
+     OPT_INVALID = 0, // This is not an option ID.
+ #define PREFIX(NAME, VALUE)
+ #define OPTION(PREFIX, NAME, ID, KIND, GROUP, ALIAS, ALIASARGS, FLAGS, PARAM, \
+-               HELPTEXT, METAVAR) OPT_##ID,
++               HELPTEXT, METAVAR, VALUES) OPT_##ID,
+ #include "cling/Interpreter/ClingOptions.inc"
+     LastOption
+ #undef OPTION
+diff --git a/include/cling/Interpreter/ClingOptions.inc b/include/cling/Interpreter/ClingOptions.inc
+index c3d1a9ab..deedb3d5 100644
+--- a/include/cling/Interpreter/ClingOptions.inc
++++ b/include/cling/Interpreter/ClingOptions.inc
+@@ -16,26 +16,26 @@ PREFIX(prefix_2, {"--" COMMA 0})
+ #error "Define OPTION prior to including this file!"
+ #endif
+ 
+-OPTION(prefix_0, "<input>", INPUT, Input, INVALID, INVALID, 0, 0, 0, 0, 0)
+-OPTION(prefix_0, "<unknown>", UNKNOWN, Unknown, INVALID, INVALID, 0, 0, 0, 0, 0)
++OPTION(prefix_0, "<input>", INPUT, Input, INVALID, INVALID, 0, 0, 0, 0, 0, 0)
++OPTION(prefix_0, "<unknown>", UNKNOWN, Unknown, INVALID, INVALID, 0, 0, 0, 0, 0, 0)
+ OPTION(prefix_2, "errorout", _errorout, Flag, INVALID, INVALID, 0, 0, 0,
+-       "Do not recover from input errors", 0)
++       "Do not recover from input errors", 0, 0)
+ OPTION(prefix_3, "help", help, Flag, INVALID, INVALID, 0, 0, 0,
+-       "Print this help text", 0)
++       "Print this help text", 0, 0)
+ OPTION(prefix_1, "L", L, JoinedOrSeparate, INVALID, INVALID, 0, 0, 0,
+-       "Add directory to library search path", "<directory>")
++       "Add directory to library search path", "<directory>", 0)
+ // Re-implement to forward to our help
+ OPTION(prefix_1, "l", l, JoinedOrSeparate, INVALID, INVALID, 0, 0, 0,
+-       "Load a library before prompt", "<library>")
++       "Load a library before prompt", "<library>", 0)
+ OPTION(prefix_2, "metastr=", _metastr_EQ, Joined, INVALID, INVALID, 0, 0, 0,
+-       "Set the meta command tag, default '.'", 0)
++       "Set the meta command tag, default '.'", 0, 0)
+ OPTION(prefix_2, "metastr", _metastr, Separate, INVALID, INVALID, 0, 0, 0,
+-       "Set the meta command tag, default '.'", 0)
++       "Set the meta command tag, default '.'", 0, 0)
+ OPTION(prefix_2, "nologo", _nologo, Flag, INVALID, INVALID, 0, 0, 0,
+-       "Do not show startup-banner", 0)
++       "Do not show startup-banner", 0, 0)
+ OPTION(prefix_3, "noruntime", noruntime, Flag, INVALID, INVALID, 0, 0, 0,
+-       "Disable runtime support (no null checking, no value printing)", 0)
++       "Disable runtime support (no null checking, no value printing)", 0, 0)
+ OPTION(prefix_3, "version", version, Flag, INVALID, INVALID, 0, 0, 0,
+-       "Print the compiler version", 0)
++       "Print the compiler version", 0, 0)
+ OPTION(prefix_1, "v", v, Flag, INVALID, INVALID, 0, 0, 0,
+-       "Enable verbose output", 0)
++       "Enable verbose output", 0, 0)
+diff --git a/lib/Interpreter/InvocationOptions.cpp b/lib/Interpreter/InvocationOptions.cpp
+index 75254267..f3d7123e 100644
+--- a/lib/Interpreter/InvocationOptions.cpp
++++ b/lib/Interpreter/InvocationOptions.cpp
+@@ -42,7 +42,7 @@ static const char kNoStdInc[] = "-nostdinc";
+ 
+ #define PREFIX(NAME, VALUE) const char *const NAME[] = VALUE;
+ #define OPTION(PREFIX, NAME, ID, KIND, GROUP, ALIAS, ALIASARGS, FLAGS, PARAM, \
+-               HELPTEXT, METAVAR)
++               HELPTEXT, METAVAR, VALUES)
+ #include "cling/Interpreter/ClingOptions.inc"
+ #undef OPTION
+ #undef PREFIX
+@@ -50,9 +50,9 @@ static const char kNoStdInc[] = "-nostdinc";
+   static const OptTable::Info ClingInfoTable[] = {
+ #define PREFIX(NAME, VALUE)
+ #define OPTION(PREFIX, NAME, ID, KIND, GROUP, ALIAS, ALIASARGS, FLAGS, PARAM, \
+-               HELPTEXT, METAVAR)   \
++               HELPTEXT, METAVAR, VALUES)   \
+   { PREFIX, NAME, HELPTEXT, METAVAR, OPT_##ID, Option::KIND##Class, PARAM, \
+-    FLAGS, OPT_##GROUP, OPT_##ALIAS, ALIASARGS },
++    FLAGS, OPT_##GROUP, OPT_##ALIAS, ALIASARGS, VALUES },
+ #include "cling/Interpreter/ClingOptions.inc"
+ #undef OPTION
+ #undef PREFIX
+-- 
+2.14.1
+

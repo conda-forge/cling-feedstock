@@ -1,0 +1,20 @@
+From 3959f528b7d3eae053f8a4585692c2c66c7edb47 Mon Sep 17 00:00:00 2001
+From: Vassil Vassilev <v.g.vassilev@gmail.com>
+Date: Wed, 18 Oct 2017 17:33:45 +0200
+Subject: [PATCH 10/27] Bump the last known good llvm revision to point to
+ release 5.0
+
+---
+ LastKnownGoodLLVMSVNRevision.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/LastKnownGoodLLVMSVNRevision.txt b/LastKnownGoodLLVMSVNRevision.txt
+index 612afc97..273ce20a 100644
+--- a/LastKnownGoodLLVMSVNRevision.txt
++++ b/LastKnownGoodLLVMSVNRevision.txt
+@@ -1 +1 @@
+-302975
++release_50
+-- 
+2.14.1
+

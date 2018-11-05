@@ -1,0 +1,46 @@
+From 89c6351e3a2df6618501e912fa4eb57cc79a359a Mon Sep 17 00:00:00 2001
+From: Raphael Isemann <teemperor@gmail.com>
+Date: Mon, 6 Nov 2017 16:19:02 +0100
+Subject: [PATCH 18/27] Fix thread local storage in the cling JIT
+
+TLS is currently not suppored in the JIT on some platforms.
+
+However, it's possible to enable emulated TLS support in LLVM
+which means that we now support TLS across many architectures.
+The performance downsides of this are the overhead of accessing
+the variable due to the additional indirection by the emulation.
+
+However, this overhead is minimal and shouldn't affect most
+programs. It also can be easily worked around from the user side.
+This can be donefFor example by wrapping TLS variables into a single
+TLS struct variable that then contains the other variables. Or just
+minimizing referencing the TLS variable and use a normal copy of
+the variable instead and write it back later.
+
+Patch created with a lot of help from Lang Hames and Pavel Labath!
+---
+ lib/Interpreter/IncrementalExecutor.cpp | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/lib/Interpreter/IncrementalExecutor.cpp b/lib/Interpreter/IncrementalExecutor.cpp
+index f4749e4d..0fd9da09 100644
+--- a/lib/Interpreter/IncrementalExecutor.cpp
++++ b/lib/Interpreter/IncrementalExecutor.cpp
+@@ -72,11 +72,13 @@ CreateHostTargetMachine(const clang::CompilerInstance& CI) {
+   std::string MCPU;
+   std::string FeaturesStr;
+ 
+-  return std::unique_ptr<TargetMachine>(TheTarget->createTargetMachine(Triple,
++  auto TM = std::unique_ptr<TargetMachine>(TheTarget->createTargetMachine(Triple,
+                                         MCPU, FeaturesStr,
+                                         llvm::TargetOptions(),
+                                         Optional<Reloc::Model>(), CMModel,
+                                         OptLevel));
++  TM->Options.EmulatedTLS = true;
++  return TM;
+ }
+ 
+ } // anonymous namespace
+-- 
+2.14.1
+

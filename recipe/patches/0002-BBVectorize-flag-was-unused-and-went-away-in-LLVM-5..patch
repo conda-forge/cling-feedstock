@@ -1,0 +1,24 @@
+From 628c1fbc86f93c6761d1d9efb4761bd87afe7ea4 Mon Sep 17 00:00:00 2001
+From: Vassil Vassilev <v.g.vassilev@gmail.com>
+Date: Fri, 6 Oct 2017 09:38:45 +0200
+Subject: [PATCH 02/27] BBVectorize flag was unused and went away in LLVM 5.0
+
+---
+ lib/Interpreter/BackendPasses.cpp | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/lib/Interpreter/BackendPasses.cpp b/lib/Interpreter/BackendPasses.cpp
+index db37819a..10dc61fa 100644
+--- a/lib/Interpreter/BackendPasses.cpp
++++ b/lib/Interpreter/BackendPasses.cpp
+@@ -115,7 +115,6 @@ void BackendPasses::CreatePasses(llvm::Module& M, int OptLevel)
+   llvm::PassManagerBuilder PMBuilder;
+   PMBuilder.OptLevel = OptLevel;
+   PMBuilder.SizeLevel = m_CGOpts.OptimizeSize;
+-  PMBuilder.BBVectorize = 0; // m_CGOpts.VectorizeBB;
+   PMBuilder.SLPVectorize = OptLevel > 1 ? 1 : 0; // m_CGOpts.VectorizeSLP
+   PMBuilder.LoopVectorize = OptLevel > 1 ? 1 : 0; // m_CGOpts.VectorizeLoop
+ 
+-- 
+2.14.1
+
