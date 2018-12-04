@@ -1,0 +1,47 @@
+From 54dbb830b36b30d1700df84fcb662495e2e26783 Mon Sep 17 00:00:00 2001
+From: vagrant <v.g.vassilev@gmail.com>
+Date: Sun, 19 Nov 2017 08:46:40 -0800
+Subject: [PATCH 26/27] Disable module file validation.
+
+We need to disable the validation of PCM files because rootcling
+serializes what it sees. For instance, we even serialize in the PCM
+file some temporary lookup buffers and the contents of the module maps.
+
+We disable the PCH validation but that is not sufficient for PCM. The
+TCling code `fInterpreter->getCI()->getPreprocessorOpts().DisablePCHValidation = true`
+is not enough because we rely more on the clang driver to setup correctly
+our modules-aware interpreter.
+
+This patch just uses the correct flag when setting up cling.
+
+A proper fix to this issue is thoroughly described in RE-0003 (rootcling
+refactor proposal).
+---
+ lib/Interpreter/CIFactory.cpp | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/lib/Interpreter/CIFactory.cpp b/lib/Interpreter/CIFactory.cpp
+index ec754393..15e466cc 100644
+--- a/lib/Interpreter/CIFactory.cpp
++++ b/lib/Interpreter/CIFactory.cpp
+@@ -825,7 +825,16 @@ static void stringifyPreprocSetting(PreprocessorOptions& PPOpts,
+       // is a ROOT-specific issue tracked by ROOT-9088.
+       // FIXME: Remove after merging ROOT's PR1306.
+       argvCompile.push_back("-Wno-modules-import-nested-redundant");
+-
++      // FIXME: We get an error "'cling/module.modulemap' from the precompiled
++      //  header has been overridden". This comes from a bug that rootcling
++      // introduces by adding a lot of garbage in the PCH/PCM files because it
++      // essentially serializes its current state of the AST. That usually
++      // includes a few memory buffers which override their own contents.
++      // We know how to remove this: just implement a callback in clang
++      // which calls back the interpreter when a module file is built. This is
++      // a lot of work as it needs fixing rootcling. See RE-0003.
++      argvCompile.push_back("-Xclang");
++      argvCompile.push_back("-fno-validate-pch");
+     }
+ 
+     if (!COpts.Language) {
+-- 
+2.14.1
+

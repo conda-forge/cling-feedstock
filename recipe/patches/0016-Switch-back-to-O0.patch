@@ -1,0 +1,72 @@
+From c912c9437d5413b071be97a04d9c98b54034b379 Mon Sep 17 00:00:00 2001
+From: Vassil Vassilev <v.g.vassilev@gmail.com>
+Date: Fri, 20 Oct 2017 10:29:14 +0200
+Subject: [PATCH 16/27] Switch back to O0.
+
+We have a suboptimal behavior in the way cling optimizes code in O2 mode.
+Disable it until the issue is understood and fixed.
+---
+ lib/Interpreter/CIFactory.cpp    |  5 ++++-
+ test/Pragmas/opt.C               |  4 ++--
+ test/Prompt/MetaProcessor/DotO.C | 10 +++++-----
+ 3 files changed, 11 insertions(+), 8 deletions(-)
+
+diff --git a/lib/Interpreter/CIFactory.cpp b/lib/Interpreter/CIFactory.cpp
+index bbf1ae15..dd9efe17 100644
+--- a/lib/Interpreter/CIFactory.cpp
++++ b/lib/Interpreter/CIFactory.cpp
+@@ -1134,7 +1134,10 @@ static void stringifyPreprocSetting(PreprocessorOptions& PPOpts,
+     CGOpts.CXXCtorDtorAliases = 1;
+ #endif
+     // Reduce amount of emitted symbols by optimizing more.
+-    CGOpts.OptimizationLevel = 2;
++    // FIXME: We have a bug when we switch to -O2, for some cases it takes
++    // several minutes to optimize, while the same code compiled by clang -O2
++    // takes only a few seconds.
++    CGOpts.OptimizationLevel = 0;
+     // Taken from a -O2 run of clang:
+     CGOpts.DiscardValueNames = 1;
+     CGOpts.OmitLeafFramePointer = 1;
+diff --git a/test/Pragmas/opt.C b/test/Pragmas/opt.C
+index 14660619..ea1f0d4b 100644
+--- a/test/Pragmas/opt.C
++++ b/test/Pragmas/opt.C
+@@ -13,10 +13,10 @@ extern "C" int printf(const char*,...);
+ #include "cling/Interpreter/Transaction.h"
+ 
+ gCling->getDefaultOptLevel()
+-// CHECK: (int) 2
++// CHECK: (int) 0
+ 
+ (int)gCling->getLatestTransaction()->getCompilationOpts().OptLevel
+-// CHECK-NEXT: (int) 2
++// CHECK-NEXT: (int) 0
+ 
+ {
+ #pragma cling optimize(0)
+diff --git a/test/Prompt/MetaProcessor/DotO.C b/test/Prompt/MetaProcessor/DotO.C
+index d7ffe283..656c9d7e 100644
+--- a/test/Prompt/MetaProcessor/DotO.C
++++ b/test/Prompt/MetaProcessor/DotO.C
+@@ -12,13 +12,13 @@ extern "C" int printf(const char*,...);
+ #include "cling/Interpreter/Interpreter.h"
+ #include "cling/Interpreter/Transaction.h"
+ 
+-gCling->getDefaultOptLevel() // CHECK: (int) 2
+-.O // CHECK-NEXT: Current cling optimization level: 2
+-(int)gCling->getLatestTransaction()->getCompilationOpts().OptLevel // CHECK-NEXT: (int) 2
+-
+-.O 0
+ gCling->getDefaultOptLevel() // CHECK: (int) 0
+ .O // CHECK-NEXT: Current cling optimization level: 0
++(int)gCling->getLatestTransaction()->getCompilationOpts().OptLevel // CHECK-NEXT: (int) 2
++
++.O 2
++gCling->getDefaultOptLevel() // CHECK: (int) 2
++.O // CHECK-NEXT: Current cling optimization level: 2
+ 
+ #pragma cling optimize(1)
+ gCling->getDefaultOptLevel() // CHECK: (int) 0
+-- 
+2.14.1
+

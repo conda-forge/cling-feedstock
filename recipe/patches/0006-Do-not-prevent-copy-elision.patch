@@ -1,0 +1,25 @@
+From 6e1865dafbc2f457e7059442eb1ee324445af10d Mon Sep 17 00:00:00 2001
+From: Vassil Vassilev <v.g.vassilev@gmail.com>
+Date: Thu, 12 Oct 2017 15:47:21 +0200
+Subject: [PATCH 06/27] Do not prevent copy elision.
+
+---
+ lib/Interpreter/InterpreterCallbacks.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/Interpreter/InterpreterCallbacks.cpp b/lib/Interpreter/InterpreterCallbacks.cpp
+index 04552327..2e4e3b94 100644
+--- a/lib/Interpreter/InterpreterCallbacks.cpp
++++ b/lib/Interpreter/InterpreterCallbacks.cpp
+@@ -211,7 +211,7 @@ namespace cling {
+ 
+       std::vector<std::unique_ptr<ASTConsumer>> Consumers;
+       Consumers.push_back(std::move(wrapper));
+-      Consumers.push_back(std::move(m_Interpreter->getCI()->takeASTConsumer()));
++      Consumers.push_back(m_Interpreter->getCI()->takeASTConsumer());
+ 
+       std::unique_ptr<clang::MultiplexConsumer> multiConsumer(
+           new clang::MultiplexConsumer(std::move(Consumers)));
+-- 
+2.14.1
+

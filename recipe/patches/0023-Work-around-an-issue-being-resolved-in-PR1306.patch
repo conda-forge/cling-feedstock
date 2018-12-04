@@ -1,0 +1,28 @@
+From 5abbe64ffd7bc2c487564d882debcbb12c13f3e0 Mon Sep 17 00:00:00 2001
+From: Vassil Vassilev <v.g.vassilev@gmail.com>
+Date: Sat, 11 Nov 2017 10:18:41 -0700
+Subject: [PATCH 23/27] Work around an issue being resolved in PR1306.
+
+---
+ lib/Interpreter/CIFactory.cpp | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/lib/Interpreter/CIFactory.cpp b/lib/Interpreter/CIFactory.cpp
+index dd9efe17..27c69d63 100644
+--- a/lib/Interpreter/CIFactory.cpp
++++ b/lib/Interpreter/CIFactory.cpp
+@@ -821,6 +821,11 @@ static void stringifyPreprocSetting(PreprocessorOptions& PPOpts,
+       // Disable the warning when we import a module from extern C. Some headers
+       // from the STL are doing this and we can't really do anything about this.
+       argvCompile.push_back("-Wno-module-import-in-extern-c");
++      // Disable the warning when we import a module in a function body. This
++      // is a ROOT-specific issue tracked by ROOT-9088.
++      // FIXME: Remove after merging ROOT's PR1306.
++      argvCompile.push_back("-Wmodules-import-nested-redundant");
++
+     }
+ 
+     if (!COpts.Language) {
+-- 
+2.14.1
+

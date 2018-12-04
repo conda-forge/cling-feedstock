@@ -1,0 +1,25 @@
+From 97f45536c30bfca257576da887ea3ff97a34161a Mon Sep 17 00:00:00 2001
+From: Vassil Vassilev <v.g.vassilev@gmail.com>
+Date: Thu, 12 Oct 2017 15:41:58 +0200
+Subject: [PATCH 05/27] Use the setter.
+
+---
+ lib/Interpreter/Interpreter.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/Interpreter/Interpreter.cpp b/lib/Interpreter/Interpreter.cpp
+index 71e43765..291ac704 100644
+--- a/lib/Interpreter/Interpreter.cpp
++++ b/lib/Interpreter/Interpreter.cpp
+@@ -216,7 +216,7 @@ namespace cling {
+ 
+     // Initialize the opt level to what CodeGenOpts says.
+     if (m_OptLevel == -1)
+-      m_OptLevel = getCI()->getCodeGenOpts().OptimizationLevel;
++      setDefaultOptLevel(getCI()->getCodeGenOpts().OptimizationLevel);
+ 
+     Sema& SemaRef = getSema();
+     Preprocessor& PP = SemaRef.getPreprocessor();
+-- 
+2.14.1
+

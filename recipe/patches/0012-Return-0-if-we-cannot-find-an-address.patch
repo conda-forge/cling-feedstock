@@ -1,0 +1,35 @@
+From d6fe62edaf2daeee8df363757fa8b1cfdcf3455a Mon Sep 17 00:00:00 2001
+From: Vassil Vassilev <vvasilev@cern.ch>
+Date: Sat, 21 Oct 2017 19:02:01 +0200
+Subject: [PATCH 12/27] Return 0 if we cannot find an address.
+
+Add an llvm_unreachable to handle potential errors.
+---
+ lib/Interpreter/IncrementalJIT.h | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/lib/Interpreter/IncrementalJIT.h b/lib/Interpreter/IncrementalJIT.h
+index 05759065..6ef575e5 100644
+--- a/lib/Interpreter/IncrementalJIT.h
++++ b/lib/Interpreter/IncrementalJIT.h
+@@ -190,11 +190,14 @@ public:
+     // FIXME: We should decide if we want to handle the error here or make the
+     // return type of the function llvm::Expected<uint64_t> relying on the
+     // users to decide how to handle the error.
+-    if (auto Sym = getSymbolAddressWithoutMangling(Mangle(Name), AlsoInProcess))
+-      if (auto AddrOrErr = Sym.getAddress())
++    if (auto S = getSymbolAddressWithoutMangling(Mangle(Name), AlsoInProcess)) {
++      if (auto AddrOrErr = S.getAddress())
+         return *AddrOrErr;
++      else
++        llvm_unreachable("Handle the error case");
++    }
+ 
+-    return ~0U;
++    return 0;
+   }
+ 
+   ///\brief Get the address of a symbol from the JIT or the memory manager.
+-- 
+2.14.1
+

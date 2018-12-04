@@ -1,0 +1,25 @@
+From 3256a1dc1f38651aaca3855ca5d6a5f06f93d25c Mon Sep 17 00:00:00 2001
+From: Axel Naumann <Axel.Naumann@cern.ch>
+Date: Thu, 2 Nov 2017 20:09:30 +0100
+Subject: [PATCH 15/27] Spelling.
+
+---
+ lib/Interpreter/CIFactory.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/Interpreter/CIFactory.cpp b/lib/Interpreter/CIFactory.cpp
+index 2158bcb5..bbf1ae15 100644
+--- a/lib/Interpreter/CIFactory.cpp
++++ b/lib/Interpreter/CIFactory.cpp
+@@ -709,7 +709,7 @@ static void stringifyPreprocSetting(PreprocessorOptions& PPOpts,
+       PPOpts.addMacroDef("__CLING__CXX14");
+ 
+     if (CI->getDiagnostics().hasErrorOccurred()) {
+-      cling::errs() << "Compiler error to early in initialization.\n";
++      cling::errs() << "Compiler error too early in initialization.\n";
+       return false;
+     }
+ 
+-- 
+2.14.1
+

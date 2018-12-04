@@ -1,0 +1,31 @@
+From 5f3494f950848352370db139f69dbd1c4e9d794b Mon Sep 17 00:00:00 2001
+From: Vassil Vassilev <vvasilev@cern.ch>
+Date: Sat, 21 Oct 2017 19:01:43 +0200
+Subject: [PATCH 11/27] Do not forget to return from the function.
+
+This was probably due to non-proprely merged conflict.
+---
+ lib/Interpreter/IncrementalJIT.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lib/Interpreter/IncrementalJIT.cpp b/lib/Interpreter/IncrementalJIT.cpp
+index 33c88207..1e7ef048 100644
+--- a/lib/Interpreter/IncrementalJIT.cpp
++++ b/lib/Interpreter/IncrementalJIT.cpp
+@@ -433,11 +433,11 @@ IncrementalJIT::removeModule(const std::shared_ptr<llvm::Module>& module) {
+   // this is resolved we can remove this check enabling the assert.
+   auto IUnload = m_UnloadPoints.find(module.get());
+   if (IUnload == m_UnloadPoints.end())
+-    return;
++    return llvm::Error::success();
+   auto Handle = IUnload->second;
+   assert(*Handle && "Trying to remove a non existent module!");
+   m_UnloadPoints.erase(IUnload);
+-  m_LazyEmitLayer.removeModuleSet(Handle);
++  return m_LazyEmitLayer.removeModule(Handle);
+ }
+ 
+ }// end namespace cling
+-- 
+2.14.1
+

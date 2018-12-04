@@ -1,0 +1,31 @@
+From 62eac4d1d20b210c1bcd95a1721fd26d770406a8 Mon Sep 17 00:00:00 2001
+From: Raphael Isemann <teemperor@gmail.com>
+Date: Mon, 6 Nov 2017 16:21:18 +0100
+Subject: [PATCH 19/27] Fix formatting of the TLS commit
+
+---
+ lib/Interpreter/IncrementalExecutor.cpp | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/lib/Interpreter/IncrementalExecutor.cpp b/lib/Interpreter/IncrementalExecutor.cpp
+index 0fd9da09..6edd43ae 100644
+--- a/lib/Interpreter/IncrementalExecutor.cpp
++++ b/lib/Interpreter/IncrementalExecutor.cpp
+@@ -72,11 +72,9 @@ CreateHostTargetMachine(const clang::CompilerInstance& CI) {
+   std::string MCPU;
+   std::string FeaturesStr;
+ 
+-  auto TM = std::unique_ptr<TargetMachine>(TheTarget->createTargetMachine(Triple,
+-                                        MCPU, FeaturesStr,
+-                                        llvm::TargetOptions(),
+-                                        Optional<Reloc::Model>(), CMModel,
+-                                        OptLevel));
++  auto TM = std::unique_ptr<TargetMachine>(TheTarget->createTargetMachine(
++      Triple, MCPU, FeaturesStr, llvm::TargetOptions(),
++      Optional<Reloc::Model>(), CMModel, OptLevel));
+   TM->Options.EmulatedTLS = true;
+   return TM;
+ }
+-- 
+2.14.1
+

@@ -1,0 +1,65 @@
+From 315dfad70eae62f2fcba1256af773bd9cf2a87b1 Mon Sep 17 00:00:00 2001
+From: Axel Naumann <Axel.Naumann@cern.ch>
+Date: Tue, 7 Nov 2017 14:20:37 +0100
+Subject: [PATCH 22/27] Adapt to new default opt level.
+
+As the default opt level decides which user-set opt levels cling will complain about, "control flow" changes were needed for the tests.
+---
+ test/Pragmas/opt.C               | 13 ++++++++-----
+ test/Prompt/MetaProcessor/DotO.C | 10 +++++-----
+ 2 files changed, 13 insertions(+), 10 deletions(-)
+
+diff --git a/test/Pragmas/opt.C b/test/Pragmas/opt.C
+index ea1f0d4b..dfb4c7ed 100644
+--- a/test/Pragmas/opt.C
++++ b/test/Pragmas/opt.C
+@@ -37,16 +37,19 @@ gCling->getDefaultOptLevel()
+ // CHECK-NEXT: Transaction OptLevel=2
+ 
+ {
+-#pragma cling optimize(0)
++#pragma cling optimize(2)
++// CHECK-NEXT: cling::PHOptLevel: conflicting `#pragma cling optimize` directives: was already set to 2
+ #pragma cling optimize(1)
++// CHECK-NEXT: Setting to lower value of 1
++#pragma cling optimize(2)
++// CHECK-NEXT: cling::PHOptLevel: conflicting `#pragma cling optimize` directives: was already set to 1
++// CHECK-NEXT: Ignoring higher value of 2
+   printf("Transaction OptLevel=%d\n", (int)gCling->getLatestTransaction()->getCompilationOpts().OptLevel);
+ }
+-// CHECK-NEXT: cling::PHOptLevel: conflicting `#pragma cling optimize` directives: was already set to 0
+-// CHECK-NEXT: Ignoring higher value of 1
+-// CHECK-NEXT: Transaction OptLevel=0
++// CHECK-NEXT: Transaction OptLevel=1
+ 
+ .O
+-// CHECK-NEXT: Current cling optimization level: 2
++// CHECK-NEXT: Current cling optimization level: 0
+ 
+ // No parenthesis
+ {
+diff --git a/test/Prompt/MetaProcessor/DotO.C b/test/Prompt/MetaProcessor/DotO.C
+index 656c9d7e..ec986a2d 100644
+--- a/test/Prompt/MetaProcessor/DotO.C
++++ b/test/Prompt/MetaProcessor/DotO.C
+@@ -14,12 +14,12 @@ extern "C" int printf(const char*,...);
+ 
+ gCling->getDefaultOptLevel() // CHECK: (int) 0
+ .O // CHECK-NEXT: Current cling optimization level: 0
+-(int)gCling->getLatestTransaction()->getCompilationOpts().OptLevel // CHECK-NEXT: (int) 2
++(int)gCling->getLatestTransaction()->getCompilationOpts().OptLevel // CHECK-NEXT: (int) 0
+ 
+ .O 2
+-gCling->getDefaultOptLevel() // CHECK: (int) 2
++gCling->getDefaultOptLevel() // CHECK-NEXT: (int) 2
+ .O // CHECK-NEXT: Current cling optimization level: 2
+ 
+-#pragma cling optimize(1)
+-gCling->getDefaultOptLevel() // CHECK: (int) 0
+-.O // CHECK-NEXT: Current cling optimization level: 0
++#pragma cling optimize(1) // shouldn't change default but only current transaction (which is empty except this pragma)
++gCling->getDefaultOptLevel() // CHECK-NEXT: (int) 2
++.O // CHECK-NEXT: Current cling optimization level: 2
+-- 
+2.14.1
+

@@ -1,0 +1,56 @@
+From 6c76d6c80cc4c1868d3649156cbd6de9ac646557 Mon Sep 17 00:00:00 2001
+From: gouarin <loic.gouarin@gmail.com>
+Date: Fri, 1 Dec 2017 13:12:01 +0100
+Subject: [PATCH] fix STATIC lincling
+
+---
+ tools/libcling/CMakeLists.txt | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
+
+diff --git a/tools/libcling/CMakeLists.txt b/tools/libcling/CMakeLists.txt
+index fc3c1a66..5ee960e1 100644
+--- a/tools/libcling/CMakeLists.txt
++++ b/tools/libcling/CMakeLists.txt
+@@ -73,8 +73,9 @@ else()
+   set(output_name "cling")
+ endif()
+ 
+-add_cling_library(libcling ${ENABLE_SHARED} ${ENABLE_STATIC}
+-  OUTPUT_NAME ${output_name}
++#add_cling_library(libcling ${ENABLE_SHARED} ${ENABLE_STATIC}
++add_cling_library(libcling STATIC
++OUTPUT_NAME ${output_name}
+   ${SOURCES}
+ #  DEPENDS clang-headers
+ 
+@@ -89,15 +90,15 @@ add_cling_library(libcling ${ENABLE_SHARED} ${ENABLE_STATIC}
+ set_target_properties(libcling
+         PROPERTIES ENABLE_EXPORTS 1)
+ 
+-if(ENABLE_SHARED)
+-  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+-    set(LIBCLING_LINK_FLAGS " -Wl,-compatibility_version -Wl,1")
+-    if (DEFINED ${LLVM_SUBMIT_VERSION})
+-      set(LIBCLING_LINK_FLAGS
+-        "${LIBCLING_LINK_FLAGS} -Wl,-current_version -Wl,${LLVM_SUBMIT_VERSION}.${LLVM_SUBMIT_SUBVERSION}")
+-    endif()
+-
+-    set_property(TARGET libcling APPEND_STRING PROPERTY
+-                 LINK_FLAGS ${LIBCLING_LINK_FLAGS})
+-  endif()
+-endif()
++# if(ENABLE_SHARED)
++#   if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
++#     set(LIBCLING_LINK_FLAGS " -Wl,-compatibility_version -Wl,1")
++#     if (DEFINED ${LLVM_SUBMIT_VERSION})
++#       set(LIBCLING_LINK_FLAGS
++#         "${LIBCLING_LINK_FLAGS} -Wl,-current_version -Wl,${LLVM_SUBMIT_VERSION}.${LLVM_SUBMIT_SUBVERSION}")
++#     endif()
++
++#     set_property(TARGET libcling APPEND_STRING PROPERTY
++#                  LINK_FLAGS ${LIBCLING_LINK_FLAGS})
++#   endif()
++# endif()
+-- 
+2.14.1
+

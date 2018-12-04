@@ -1,0 +1,109 @@
+From a9808afd4023c641ba6db78d144ccd3ff7963269 Mon Sep 17 00:00:00 2001
+From: Axel Naumann <Axel.Naumann@cern.ch>
+Date: Tue, 7 Nov 2017 14:19:24 +0100
+Subject: [PATCH 21/27] Adapt to format changes in floating point value
+ printing.
+
+---
+ test/Interfaces/evaluate.C                | 6 +++---
+ test/Prompt/DontWrap.C                    | 2 +-
+ test/Prompt/OutputRedirect.C              | 2 +-
+ test/Prompt/ValuePrinter/Assignments.C    | 2 +-
+ test/Prompt/ValuePrinter/Regression.C     | 2 +-
+ test/Prompt/ValuePrinter/TuplesAndPairs.C | 2 +-
+ 6 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/test/Interfaces/evaluate.C b/test/Interfaces/evaluate.C
+index 558c9fc7..ee19829e 100644
+--- a/test/Interfaces/evaluate.C
++++ b/test/Interfaces/evaluate.C
+@@ -36,7 +36,7 @@ gCling->evaluate("bool a = [](){return true;};", V);
+ V // CHECK-NEXT: (cling::Value &) boxes [(bool) true]
+ 
+ gCling->evaluate("auto a = 12.3; a;", V);
+-V // CHECK: (cling::Value &) boxes [(double) 12.300000]
++V // CHECK: (cling::Value &) boxes [(double) 12.3]
+ 
+ long LongV = 17;
+ gCling->evaluate("LongV;", V);
+@@ -54,10 +54,10 @@ V // CHECK: (cling::Value &) boxes [(int *) 0x12 <invalid memory address>]
+ 
+ // Savannah #96277
+ gCling->evaluate("gCling->declare(\"double sin(double);\"); double one = sin(3.141/2);", V);
+-V // CHECK: (cling::Value &) boxes [(double) 1.000000]
++V // CHECK: (cling::Value &) boxes [(double) 1]
+ 
+ gCling->process("double one = sin(3.141/2); // expected-note {{previous definition is here}}", &V);
+-V // CHECK: (cling::Value &) boxes [(double) 1.000000]
++V // CHECK: (cling::Value &) boxes [(double) 1]
+ one // CHECK: (double) 1
+ int one; // expected-error {{redefinition of 'one' with a different type: 'int' vs 'double'}}
+ 
+diff --git a/test/Prompt/DontWrap.C b/test/Prompt/DontWrap.C
+index 7679cf30..3fe19f45 100644
+--- a/test/Prompt/DontWrap.C
++++ b/test/Prompt/DontWrap.C
+@@ -20,7 +20,7 @@ t.methodDefLater()
+ class TestDecl2 { public: float methodDefLater(); } b;
+ float TestDecl2::methodDefLater() { return 5.f; }
+ b.methodDefLater()
+-// CHECK: (float) 5.00000f
++// CHECK: (float) 5f
+ 
+ static int staticFunc(int a) {
+   printf("staticFunc(%d)\n", a);
+diff --git a/test/Prompt/OutputRedirect.C b/test/Prompt/OutputRedirect.C
+index 1ddb1f1a..233c6fe9 100644
+--- a/test/Prompt/OutputRedirect.C
++++ b/test/Prompt/OutputRedirect.C
+@@ -20,7 +20,7 @@ static void setup() {
+ setup();
+ 
+ // ROOT-8696
+-.5 //CHECKOUT: (double) 0.500000
++.5 //CHECKOUT: (double) 0.5
+ 
+ .2>&1
+ std::cerr << "Error into stdout.\n";
+diff --git a/test/Prompt/ValuePrinter/Assignments.C b/test/Prompt/ValuePrinter/Assignments.C
+index 486dd54b..3dbcc5bb 100644
+--- a/test/Prompt/ValuePrinter/Assignments.C
++++ b/test/Prompt/ValuePrinter/Assignments.C
+@@ -47,7 +47,7 @@ e2
+ 
+ 
+ // Arrays:
+-float farr[] = {0.,1.,2.,3.,4.,5.} // CHECK: (float [6]) { 0.{{0+}}f, 1.{{0+}}f, 2.{{0+}}f, 3.{{0+}}f, 4.{{0+}}f, 5.{{0+}}f }
++float farr[] = {0.,1.,2.,3.,4.,5.} // CHECK: (float [6]) { 0f, 1f, 2f, 3f, 4f, 5f }
+ std::string sarr[3] = {"A", "B", "C"} // CHECK: (std::string [3]) { "A", "B", "C" }
+ 
+ typedef void (*F_t)(int);
+diff --git a/test/Prompt/ValuePrinter/Regression.C b/test/Prompt/ValuePrinter/Regression.C
+index 414a1565..f8cb3cb4 100644
+--- a/test/Prompt/ValuePrinter/Regression.C
++++ b/test/Prompt/ValuePrinter/Regression.C
+@@ -46,7 +46,7 @@ p // CHECK: (int *) 0x123
+ const int *q = (int*)0x123;
+ q // CHECK: (const int *) 0x123
+ 
+-0.00001234L // CHECK: (long double) 0.00001234{{[0-9]*}}L
++0.00001234L // CHECK: (long double) 1.234e-05L
+ 
+ // PR ROOT-5467
+ &A::someFunc // CHECK: (int (A::*)(float)) Function @0x{{[0-9a-f]+}}
+diff --git a/test/Prompt/ValuePrinter/TuplesAndPairs.C b/test/Prompt/ValuePrinter/TuplesAndPairs.C
+index 20cab14b..55421c5d 100644
+--- a/test/Prompt/ValuePrinter/TuplesAndPairs.C
++++ b/test/Prompt/ValuePrinter/TuplesAndPairs.C
+@@ -26,7 +26,7 @@ std::make_tuple(2)
+ //CHECK: (std::tuple<{{.*int.*}}>) { 2 }
+ 
+ std::make_tuple(1.2f)
+-//CHECK: (std::tuple<{{.*float.*}}>) { 1.20000f }
++//CHECK: (std::tuple<{{.*float.*}}>) { 1.2f }
+ 
+ std::make_tuple(1, std::make_tuple(1, 'c'))
+ //CHECK: (std::tuple<{{.*int.*,.*std::tuple<.*int,.*char.*>.*}}>) { 1, { 1, 'c' } }
+-- 
+2.14.1
+

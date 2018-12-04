@@ -1,0 +1,82 @@
+From 6a7c7d66c730a1c32d7e9a74e52893606324a032 Mon Sep 17 00:00:00 2001
+From: gouarin <loic.gouarin@gmail.com>
+Date: Tue, 28 Nov 2017 13:51:23 +0100
+Subject: [PATCH 27/27] conda packaging
+
+---
+ CMakeLists.txt                      | 6 ++++--
+ lib/Interpreter/CMakeLists.txt      | 4 ++--
+ lib/MetaProcessor/CMakeLists.txt    | 4 ++--
+ lib/UserInterface/UserInterface.cpp | 2 +-
+ 4 files changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bcc8e4be..19391bf9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -42,6 +42,8 @@ if( CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR )
+     message(FATAL_ERROR "llvm-config not found -- ${LLVM_CONFIG}")
+   endif()
+ 
++  find_package(Clang REQUIRED)
++
+   list(GET CONFIG_OUTPUT 0 ENABLE_ASSERTIONS)
+   list(GET CONFIG_OUTPUT 1 TOOLS_BINARY_DIR)
+   list(GET CONFIG_OUTPUT 2 LIBRARY_DIR)
+@@ -469,8 +471,8 @@ get_property(CLANG_TABLEGEN_TARGETS GLOBAL PROPERTY CLANG_TABLEGEN_TARGETS)
+ list(APPEND LLVM_COMMON_DEPENDS ${CLANG_TABLEGEN_TARGETS})
+ 
+ # And llvm-intrinsics.
+-list(APPEND LLVM_COMMON_DEPENDS intrinsics_gen)
+-list(APPEND LLVM_COMMON_DEPENDS clang-headers)
++# list(APPEND LLVM_COMMON_DEPENDS intrinsics_gen)
++# list(APPEND LLVM_COMMON_DEPENDS clang-headers)
+ 
+ add_subdirectory(lib)
+ add_subdirectory(tools)
+diff --git a/lib/Interpreter/CMakeLists.txt b/lib/Interpreter/CMakeLists.txt
+index dd243ad9..c563cd74 100644
+--- a/lib/Interpreter/CMakeLists.txt
++++ b/lib/Interpreter/CMakeLists.txt
+@@ -72,8 +72,8 @@ add_cling_library(clingInterpreter OBJECT
+   ValuePrinter.cpp
+   ValuePrinterSynthesizer.cpp
+ 
+-  DEPENDS
+-  ClangDriverOptions
++  # DEPENDS
++  # ClangDriverOptions
+ 
+   LINK_LIBS
+   ${LIBS}
+diff --git a/lib/MetaProcessor/CMakeLists.txt b/lib/MetaProcessor/CMakeLists.txt
+index 5460a2a9..06b09642 100644
+--- a/lib/MetaProcessor/CMakeLists.txt
++++ b/lib/MetaProcessor/CMakeLists.txt
+@@ -19,8 +19,8 @@ add_cling_library(clingMetaProcessor OBJECT
+   MetaProcessor.cpp
+   MetaSema.cpp
+ 
+-  DEPENDS
+-  ClangDriverOptions
++  # DEPENDS
++  # ClangDriverOptions
+ 
+   LINK_LIBS
+   clangLex
+diff --git a/lib/UserInterface/UserInterface.cpp b/lib/UserInterface/UserInterface.cpp
+index febd5d97..f3ec2d29 100644
+--- a/lib/UserInterface/UserInterface.cpp
++++ b/lib/UserInterface/UserInterface.cpp
+@@ -20,7 +20,7 @@
+ #include "llvm/ADT/SmallString.h"
+ #include "llvm/Support/ErrorHandling.h"
+ #include "llvm/Support/Path.h"
+-#include "llvm/Config/config.h"
++#include "llvm/Config/llvm-config.h"
+ 
+ #include "clang/Basic/LangOptions.h"
+ #include "clang/Frontend/CompilerInstance.h"
+-- 
+2.14.1
+
