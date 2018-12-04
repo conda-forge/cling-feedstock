@@ -50,7 +50,9 @@ source:
 
 build:
     number: {{ build_number }}
-    skip: True  # [win and vc<14]
+    {% if 'toolchain' in compiler('cxx') %}skip: True{% endif %}  # Only build with modern compilers.
+    skip: True  # [win]
+    # skip: True  # [win and vc<14]
 
 requirements:
   build:
