@@ -1,7 +1,7 @@
 {% set name = "cling" %}
 {% set version = "0.5" %}
 {% set sha256 = "ac017e7f48d8f47d5d13815b77f5c555769f3a5e2c3cae8ba5bf4ea34e39923a" %}
-{% set build_number = 1000 %}
+{% set build_number = 1001 %}
 {% set clang_version = "5.0.0" %}
 
 package:
@@ -67,6 +67,10 @@ requirements:
     - clang_variant * cling
     - zlib
   run:
+    # We really depend on the host compiler at runtime:
+    #  - the host compiler STL is one to be used.
+    #  - it is used by cling's runtime compatibility check.
+    - {{ compiler('cxx') }}
     - clangdev={{ clang_version }}
     - clang_variant * cling
 
