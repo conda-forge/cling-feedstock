@@ -65,6 +65,7 @@ requirements:
   host:
     - clangdev={{ clang_version }}
     - clang_variant * cling
+    - zlib
   run:
     - clangdev={{ clang_version }}
     - clang_variant * cling
