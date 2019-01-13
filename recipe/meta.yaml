@@ -77,6 +77,8 @@ requirements:
 test:
   commands:
     - test -f $PREFIX/bin/cling  # [unix]
+    - cling '2+3'
+    - cling '#include <vector>; std::vector<double> a = {1, 2, 3}'
 
 about:
   dev_url: https://github.com/root-mirror/cling
