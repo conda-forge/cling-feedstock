@@ -11,7 +11,7 @@ cmake \
   -DCMAKE_EXE_LINKER_FLAGS="-Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib" \
   -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib" \
   -DCMAKE_BUILD_TYPE=Release \
-  -DCLING_INCLUDE_PATHS=${PREFIX}/${HOST}/include/c++/7.3.0:${PREFIX}/${HOST}/sysroot/usr/include \
+  -DCLING_INCLUDE_PATHS=${PREFIX}/${HOST}/include/c++/$(${CXX} -dumpversion):${PREFIX}/${HOST}/sysroot/usr/include \
   $SRC_DIR
 
 make -j${CPU_COUNT}
