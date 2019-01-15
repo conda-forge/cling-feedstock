@@ -1,0 +1,37 @@
+From 5bf0adbeb64b6a5a12ecc10c9abf9b78198fbb1b Mon Sep 17 00:00:00 2001
+From: Sylvain Corlay <sylvain.corlay@gmail.com>
+Date: Tue, 15 Jan 2019 17:23:45 +0100
+Subject: [PATCH] environment-include-paths
+
+---
+ lib/Interpreter/CIFactory.cpp | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/lib/Interpreter/CIFactory.cpp b/lib/Interpreter/CIFactory.cpp
+index 2158bcb5..b63108bd 100644
+--- a/lib/Interpreter/CIFactory.cpp
++++ b/lib/Interpreter/CIFactory.cpp
+@@ -48,6 +48,7 @@
+ #include "llvm/Target/TargetOptions.h"
+ 
+ #include <cstdio>
++#include <cstdlib>
+ #include <ctime>
+ #include <memory>
+ 
+@@ -646,6 +647,12 @@ static void stringifyPreprocSetting(PreprocessorOptions& PPOpts,
+       cling::log() << "  \"" CLING_INCLUDE_PATHS "\"\n";
+     utils::AddIncludePaths(CLING_INCLUDE_PATHS, HOpts);
+ #endif
++    if (const char* env_p = std::getenv("CLING_INCLUDE_PATHS"))
++    {
++       if (HOpts.Verbose)
++         cling::log() << "  \"" << env_p << "\"\n";
++       utils::AddIncludePaths(env_p, HOpts);
++    }
+     llvm::SmallString<512> P(ClingBin);
+     if (!P.empty()) {
+       // Remove /cling from foo/bin/clang
+-- 
+2.17.1
+

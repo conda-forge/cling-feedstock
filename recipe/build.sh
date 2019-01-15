@@ -3,28 +3,8 @@
 mkdir build
 cd build
 
-# OS X
-# ----
-#
-# On MacOSX, the SDK is not distributed by conda
-#
-# Until version 10.13 (included), the OSX SDK headers were in
-# /usr/include/ and /usr/include/CXX_VERSION for the standard
-# library headers.
-#
-# From version 10.14, the OSX SDK is installed in
-# /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/
-#
-# Linux
-# -----
-#
-# The host compiler is distributed as a conda package.
-#
-
 EXTRA_CMAKE_ARGS=""
-if [[ `uname` == "Darwin" ]]; then
-  EXTRA_CMAKE_ARGS="${EXTRA_CMAKE_ARGS} -DCLING_INCLUDE_PATHS=/usr/include:/usr/include/c++/$(${CXX} -dumpversion):/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include:/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1"
-else
+if [[ `uname` == "Linux" ]]; then
   EXTRA_CMAKE_ARGS="${EXTRA_CMAKE_ARGS} -DCLING_INCLUDE_PATHS=${PREFIX}/${HOST}/include/c++/$(${CXX} -dumpversion):${PREFIX}/${HOST}/sysroot/usr/include"
 fi
 
@@ -43,3 +23,8 @@ cmake \
 
 make -j${CPU_COUNT}
 make install
+
+ACTIVATE_DIR=$PREFIX/etc/conda/activate.d
+mkdir -p $ACTIVATE_DIR
+
+cp $RECIPE_DIR/scripts/activate.sh $ACTIVATE_DIR/activate-cling.sh
