@@ -52,7 +52,6 @@ source:
 
 build:
   number: {{ build_number }}
-  {% if 'toolchain' in compiler('cxx') %}skip: True{% endif %}  # Only build with modern compilers.
   # clangdev 5.0.0 is not rebuilt yet for windows
   skip: True  # [win]
   # skip: True  # [win and vc<14]
