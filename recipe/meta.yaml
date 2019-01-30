@@ -2,7 +2,7 @@
 {% set version = "0.5" %}
 {% set sha256 = "ac017e7f48d8f47d5d13815b77f5c555769f3a5e2c3cae8ba5bf4ea34e39923a" %}
 {% set build_number = 1004 %}
-{% set clang_version = "5.0.0" %}
+{% set clang_version = [5, 0, 0] %}
 {% set clang_patches_version = "6.14.06" %}
 
 package:
@@ -63,8 +63,8 @@ requirements:
     - ninja  # [win]
     - {{ compiler('cxx') }}
   host:
-    - llvmdev=5
-    - clangdev={{ clang_version }}
+    - llvmdev={{ clang_version[0] }}
+    - clangdev={{ clang_version|join('.') }}
     - clang_variant * cling_{{ clang_patches_version }}
     - zlib
   run:
@@ -72,7 +72,7 @@ requirements:
     #  - the host compiler STL is one to be used.
     #  - it is used by cling's runtime compatibility check.
     - {{ compiler('cxx') }}  # [linux]
-    - clangdev={{ clang_version }}
+    - clangdev={{ clang_version|join('.') }}
     - clang_variant * cling_{{ clang_patches_version }}
 
 test:
