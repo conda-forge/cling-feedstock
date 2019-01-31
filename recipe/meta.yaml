@@ -57,7 +57,6 @@ build:
 requirements:
   build:
     - cmake
-    - ninja  # [win]
     - {{ compiler('cxx') }}
   host:
     - clangdev={{ clang_version }}
