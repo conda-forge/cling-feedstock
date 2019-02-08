@@ -1,3 +1,6 @@
+:: Remove -GL from CXXFLAGS
+set "CXXFLAGS= -MD"
+
 mkdir build
 cd build
 
