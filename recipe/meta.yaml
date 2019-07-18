@@ -1,7 +1,7 @@
 {% set name = "cling" %}
 {% set version = "0.5" %}
 {% set sha256 = "ac017e7f48d8f47d5d13815b77f5c555769f3a5e2c3cae8ba5bf4ea34e39923a" %}
-{% set build_number = 1006 %}
+{% set build_number = 1007 %}
 {% set clang_version = [5, 0, 0] %}
 {% set clang_patches_version = "6.14.06" %}
 
@@ -67,13 +67,17 @@ requirements:
     - clangdev={{ clang_version|join('.') }}
     - clang_variant * cling_{{ clang_patches_version }}
     - zlib
+    # Strong run exports from clangxx_osx-64 don't pin libcxx.
+    # Cling does require the same version of libcxx to be used.
+    - {{ pin_compatible('libcxx', exact=True) }}  # [osx]
   run:
     # We really depend on the host compiler at runtime:
     #  - the host compiler STL is one to be used.
     #  - it is used by cling's runtime compatibility check.
     - {{ compiler('cxx') }}  # [linux]
-    # TODO: This should match the build version instead of being fixed
-    - libcxx=4  # [osx]
+    # Strong run exports from clangxx_osx-64 don't pin libcxx.
+    # Cling does require the same version of libcxx to be used.
+    - {{ pin_compatible('libcxx', exact=True) }}  # [osx]
     - clangdev={{ clang_version|join('.') }}
     - clang_variant * cling_{{ clang_patches_version }}
 
