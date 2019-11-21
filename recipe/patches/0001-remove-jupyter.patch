@@ -32,7 +32,8 @@ index 831fed03..e16bd462 100644
 -  add_subdirectory(Jupyter)
 +#  add_subdirectory(Jupyter)
    add_subdirectory(libcling)
-   add_subdirectory(demo)
+-  add_subdirectory(demo)
++#  add_subdirectory(demo)
  endif()
 -- 
 2.14.1
