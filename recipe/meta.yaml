@@ -1,9 +1,8 @@
 {% set name = "cling" %}
-{% set version = "0.5" %}
-{% set sha256 = "ac017e7f48d8f47d5d13815b77f5c555769f3a5e2c3cae8ba5bf4ea34e39923a" %}
-{% set build_number = 1007 %}
+{% set version = "0.6" %}
+{% set sha256 = "c72efd121f65afb0bf2744d4871fd9758f265a750ce921fdef767c8ab9a0fa36" %}
+{% set build_number = 0 %}
 {% set clang_version = [5, 0, 0] %}
-{% set clang_patches_version = "6.14.06" %}
 
 package:
   name: {{ name|lower }}
@@ -11,49 +10,17 @@ package:
 
 source:
   fn: {{ name }}-{{ version }}.tar.gz
-  url: https://github.com/root-mirror/cling/archive/v{{ version }}.tar.gz
+  url: https://github.com/root-project/cling/archive/v{{ version }}.tar.gz
   sha256: {{ sha256 }}
   patches:
     # Do not build Jupyter kernel - use xeus-cling instead
     - patches/0001-remove-jupyter.patch
-    # Upstream paches
-    - patches/0001-fix-STATIC-lincling.patch
-    - patches/0002-BBVectorize-flag-was-unused-and-went-away-in-LLVM-5..patch
-    - patches/0003-file_magic-went-into-its-own-header-file.patch
-    - patches/0004-Follow-recent-changes-in-the-OptTable.patch
-    - patches/0005-Use-the-setter.patch
-    - patches/0006-Do-not-prevent-copy-elision.patch
-    - patches/0007-Follow-recent-LLVM-changes.patch
-    - patches/0008-Make-this-code-path-unreachable.patch
-    - patches/0009-The-annotation-token-became-a-special-one.patch
-    - patches/0010-Bump-the-last-known-good-llvm-revision-to-point-to-r.patch
-    - patches/0011-Do-not-forget-to-return-from-the-function.patch
-    - patches/0012-Return-0-if-we-cannot-find-an-address.patch
-    - patches/0013-LLVM-5.0-comes-with-special-library-lookup-ordering-.patch
-    - patches/0014-Rely-on-Azog-to-allocate-the-memory-in-an-exception-.patch
-    - patches/0015-Spelling.patch
-    - patches/0016-Switch-back-to-O0.patch
-    - patches/0017-Use-g-instead-of-f-to-preserve-precision.patch
-    - patches/0018-Fix-thread-local-storage-in-the-cling-JIT.patch
-    - patches/0019-Fix-formatting-of-the-TLS-commit.patch
-    - patches/0020-Multiplex-the-ExternalASTSource-in-cling.patch
-    - patches/0021-Adapt-to-format-changes-in-floating-point-value-prin.patch
-    - patches/0022-Adapt-to-new-default-opt-level.patch
-    - patches/0023-Work-around-an-issue-being-resolved-in-PR1306.patch
-    - patches/0024-Fix-typo-we-want-to-suppress-diag-not-enable-it.patch
-    - patches/0025-Address-ROOT-9114-Issues-with-dictionary-s-enum-forw.patch
-    - patches/0026-Disable-module-file-validation.patch
     - patches/0027-conda-packaging.patch
-    # Solve issue with usage of overload operator& to retrieve addess of object
-    - patches/0001-Use-a-stable-way-to-determine-the-address-of-printed.patch
-    # Resolve issue with string representation of type not including namespace
-    - patches/0001-ast-fix.patch
 
 build:
   number: {{ build_number }}
-  # clangdev 5.0.0 is not rebuilt yet for windows
+  #skip: True  # [win and vc<14]
   skip: True  # [win]
-  # skip: True  # [win and vc<14]
   run_exports:
     - {{ pin_subpackage(name, max_pin='x.x') }}
 
@@ -63,9 +30,9 @@ requirements:
     - ninja  # [win]
     - {{ compiler('cxx') }}
   host:
-    - llvmdev={{ clang_version[0] }}
-    - clangdev={{ clang_version|join('.') }}
-    - clang_variant * cling_{{ clang_patches_version }}
+    - llvmdev {{ clang_version[0] }}
+    - clangdev {{ clang_version|join('.') }}
+    - clang_variant * cling_v{{ version }}
     - zlib
     # Strong run exports from clangxx_osx-64 don't pin libcxx.
     # Cling does require the same version of libcxx to be used.
@@ -78,8 +45,8 @@ requirements:
     # Strong run exports from clangxx_osx-64 don't pin libcxx.
     # Cling does require the same version of libcxx to be used.
     - {{ pin_compatible('libcxx', exact=True) }}  # [osx]
-    - clangdev={{ clang_version|join('.') }}
-    - clang_variant * cling_{{ clang_patches_version }}
+    - clangdev {{ clang_version|join('.') }}
+    - clang_variant * cling_v{{ version }}
 
 test:
   commands:
@@ -88,7 +55,7 @@ test:
     - cling '#include <vector>; std::vector<double> = {0, 2, 5}'
 
 about:
-  dev_url: https://github.com/root-mirror/cling
+  dev_url: https://github.com/root-project/cling
   doc_url: https://root.cern.ch/cling
   home: https://root.cern.ch/cling
   license: UI/NCSAOSL
