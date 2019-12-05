@@ -1,0 +1,27 @@
+From 947df02b81a8e38f29ae8358ddb319b6e553b45c Mon Sep 17 00:00:00 2001
+From: Sylvain Corlay <sylvain.corlay@gmail.com>
+Date: Fri, 6 Dec 2019 18:57:22 +0100
+Subject: [PATCH] Drop compile-time sysroot
+
+---
+ lib/Interpreter/CIFactory.cpp | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/lib/Interpreter/CIFactory.cpp b/lib/Interpreter/CIFactory.cpp
+index 353f1b97..0669d208 100644
+--- a/lib/Interpreter/CIFactory.cpp
++++ b/lib/Interpreter/CIFactory.cpp
+@@ -336,10 +336,6 @@ namespace {
+           sArguments.addArgument("-nostdinc++");
+       }
+ 
+-  #ifdef CLING_OSX_SYSROOT
+-    sArguments.addArgument("-isysroot", CLING_OSX_SYSROOT);
+-  #endif
+-
+ #endif // _MSC_VER
+ 
+       if (!opts.ResourceDir && !opts.NoBuiltinInc) {
+-- 
+2.24.0
+
