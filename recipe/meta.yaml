@@ -13,6 +13,8 @@ source:
   url: https://github.com/root-project/cling/archive/v{{ version }}.tar.gz
   sha256: {{ sha256 }}
   patches:
+    # Export all symbols on windows to generate import library
+    - patches/0001-Export-all-symbols-on-windows.patch
     # Do not build Jupyter kernel - use xeus-cling instead
     - patches/0001-remove-jupyter.patch
     - patches/0027-conda-packaging.patch
@@ -50,8 +52,10 @@ requirements:
 test:
   commands:
     - test -f $PREFIX/bin/cling  # [unix]
+    - if exist %LIBRARY_PREFIX%\\bin\\libcling.dll (exit 0) else (exit 1)  # [win]
+    - if exist %LIBRARY_PREFIX%\\lib\\libcling.lib (exit 0) else (exit 1)  # [win]
     - cling '2+3; 0'
-    - cling '#include <vector>; std::vector<double> = {0, 2, 5}'
+    - cling '#include <vector>'
 
 about:
   dev_url: https://github.com/root-project/cling
