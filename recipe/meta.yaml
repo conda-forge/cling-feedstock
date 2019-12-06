@@ -52,8 +52,10 @@ requirements:
 test:
   commands:
     - test -f $PREFIX/bin/cling  # [unix]
+    - if exist %LIBRARY_PREFIX%\\bin\\libcling.dll (exit 0) else (exit 1)  # [win]
+    - if exist %LIBRARY_PREFIX%\\lib\\libcling.lib (exit 0) else (exit 1)  # [win]
     - cling '2+3; 0'
-    - cling '#include <vector>; std::vector<double> = {0, 2, 5}'
+    - cling '#include <vector>'
 
 about:
   dev_url: https://github.com/root-project/cling
