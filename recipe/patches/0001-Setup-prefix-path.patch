@@ -1,0 +1,209 @@
+From 290f4e833ee44b2307ae5bf2919f435a60c71782 Mon Sep 17 00:00:00 2001
+From: Sylvain Corlay <sylvain.corlay@gmail.com>
+Date: Mon, 9 Dec 2019 15:39:50 +0100
+Subject: [PATCH] Setup prefix path
+
+---
+ include/cling/Utils/Prefix.h | 32 ++++++++++++
+ lib/Utils/CMakeLists.txt     |  1 +
+ lib/Utils/PlatformWin.cpp    | 19 ++++---
+ lib/Utils/Prefix.cpp         | 99 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 143 insertions(+), 8 deletions(-)
+ create mode 100644 include/cling/Utils/Prefix.h
+ create mode 100644 lib/Utils/Prefix.cpp
+
+diff --git a/include/cling/Utils/Prefix.h b/include/cling/Utils/Prefix.h
+new file mode 100644
+index 00000000..a6184805
+--- /dev/null
++++ b/include/cling/Utils/Prefix.h
+@@ -0,0 +1,32 @@
++/***************************************************************************
++* Copyright (c) Johan Mabille, Sylvain Corlay and Wolf Vollprecht          *
++* Copyright (c) QuantStack                                                 *
++*                                                                          *
++* Distributed under the terms of the BSD 3-Clause License.                 *
++*                                                                          *
++* The full license is in the file LICENSE, distributed with this software. *
++****************************************************************************/
++
++#ifndef CLING_PREFIX_PATHS_HPP
++#define CLING_PREFIX_PATHS_HPP
++
++#include <string>
++
++namespace cling
++{
++    namespace utils
++    {
++        /*******************
++         * executable_path *
++         *******************/
++
++        std::string executable_path();
++    
++        /*******************
++         * prefix_path *
++         *******************/
++
++        std::string prefix_path();
++    }
++}
++#endif
+diff --git a/lib/Utils/CMakeLists.txt b/lib/Utils/CMakeLists.txt
+index 288857f2..af35d64e 100644
+--- a/lib/Utils/CMakeLists.txt
++++ b/lib/Utils/CMakeLists.txt
+@@ -28,6 +28,7 @@ add_cling_library(clingUtils OBJECT
+   ParserStateRAII.cpp
+   Output.cpp
+   Paths.cpp
++  Prefix.cpp
+   PlatformPosix.cpp
+   PlatformWin.cpp
+   SourceNormalization.cpp
+diff --git a/lib/Utils/PlatformWin.cpp b/lib/Utils/PlatformWin.cpp
+index 89501402..f4218ae0 100644
+--- a/lib/Utils/PlatformWin.cpp
++++ b/lib/Utils/PlatformWin.cpp
+@@ -12,6 +12,7 @@
+ #if defined(LLVM_ON_WIN32)
+ 
+ #include "cling/Utils/Output.h"
++#include "cling/Utils/Prefix.h"
+ 
+ #include "llvm/ADT/SmallString.h"
+ #include "llvm/ADT/SmallVector.h"
+@@ -238,14 +239,16 @@ static bool getWindows10SDKVersion(std::string& SDKPath,
+ 
+ static bool getUniversalCRTSdkDir(std::string& Path,
+                                   std::string& UCRTVersion) {
+-  // vcvarsqueryregistry.bat for Visual Studio 2015 queries the registry
+-  // for the specific key "KitsRoot10". So do we.
+-  if (!GetSystemRegistryString("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\"
+-                               "Windows Kits\\Installed Roots", "KitsRoot10",
+-                               Path))
+-    return false;
+-
+-  return getWindows10SDKVersion(Path, UCRTVersion);
++  Path = prefix_path();
++  return true;
++  // // vcvarsqueryregistry.bat for Visual Studio 2015 queries the registry
++  // // for the specific key "KitsRoot10". So do we.
++  // if (!GetSystemRegistryString("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\"
++  //                              "Windows Kits\\Installed Roots", "KitsRoot10",
++  //                              Path))
++  //   return false;
++  // 
++  // return getWindows10SDKVersion(Path, UCRTVersion);
+ }
+ 
+ bool getWindowsSDKDir(std::string& WindowsSDK) {
+diff --git a/lib/Utils/Prefix.cpp b/lib/Utils/Prefix.cpp
+new file mode 100644
+index 00000000..4c11713d
+--- /dev/null
++++ b/lib/Utils/Prefix.cpp
+@@ -0,0 +1,99 @@
++/***************************************************************************
++* Copyright (c) 2018, Martin Renou, Johan Mabille, Sylvain Corlay and      *
++* Wolf Vollprecht                                                          *
++*                                                                          *
++* Distributed under the terms of the BSD 3-Clause License.                 *
++*                                                                          *
++* The full license is in the file LICENSE, distributed with this software. *
++****************************************************************************/
++
++#include "cling/Utils/Prefix.h"
++
++#include <string>
++#include <cstring>
++
++#if defined(__linux__)
++#  include <unistd.h>
++#endif
++#if defined(_WIN32)
++#  if defined(NOMINMAX)
++#    include <windows.h>
++#  else
++#    define NOMINMAX
++#    include <windows.h>
++#    undef NOMINMAX
++#  endif
++#endif
++#ifdef __APPLE__
++#  include <cstdint>
++#  include <mach-o/dyld.h>
++#endif
++#if defined(__sun)
++#  include <stdlib.h>
++#endif
++
++namespace cling
++{
++    namespace utils
++    {
++    std::string executable_path()
++    {
++        std::string path;
++        char buffer[1024];
++        std::memset(buffer, '\0', sizeof(buffer));
++#if defined(__linux__)
++        if (readlink("/proc/self/exe", buffer, sizeof(buffer)) != -1)
++        {
++            path = buffer;
++        }
++        else
++        {
++            // failed to determine run path
++        }
++#elif defined (_WIN32)
++        if (GetModuleFileNameA(nullptr, buffer, sizeof(buffer)) != 0)
++        {
++            path = buffer;
++        }
++        else
++        {
++            // failed to determine run path
++        }
++#elif defined (__APPLE__)
++        std::uint32_t size = sizeof(buffer);
++        if(_NSGetExecutablePath(buffer, &size) == 0)
++        {
++            path = buffer;
++        }
++        else
++        {
++            // failed to determine run path
++        }
++#elif defined (__FreeBSD__)
++        int mib[4] = {CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1};
++        if (sysctl(mib, 4, buffer, sizeof(buffer), NULL, 0) != -1)
++        {
++            path = buffer;
++        }
++        else
++        {
++            // failed to determine run path
++        }
++#elif defined(__sun)
++        path = getexecname();
++#endif
++        return path;
++    }
++    
++    std::string prefix_path()
++    {
++        std::string path = executable_path();
++#if defined (_WIN32)
++        char separator = '\\';
++#else
++        char separator = '/';
++#endif
++        return path.substr(0, path.find_last_of("/\\")) + separator + ".." + separator;
++    }
++    }
++}
+-- 
+2.23.0
+
