@@ -37,17 +37,11 @@ requirements:
     - clangdev {{ clang_version|join('.') }}
     - clang_variant * cling_v{{ version }}
     - zlib
-    # Strong run exports from clangxx_osx-64 don't pin libcxx.
-    # Cling does require the same version of libcxx to be used.
-    - {{ pin_compatible('libcxx', exact=True) }}  # [osx]
   run:
     # We really depend on the host compiler at runtime:
     #  - the host compiler STL is one to be used.
     #  - it is used by cling's runtime compatibility check.
     - {{ compiler('cxx') }}  # [linux]
-    # Strong run exports from clangxx_osx-64 don't pin libcxx.
-    # Cling does require the same version of libcxx to be used.
-    - {{ pin_compatible('libcxx', exact=True) }}  # [osx]
     - clangdev {{ clang_version|join('.') }}
     - clang_variant * cling_v{{ version }}
 
