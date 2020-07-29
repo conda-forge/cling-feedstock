@@ -9,7 +9,6 @@ package:
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tar.gz
   url: https://github.com/root-project/cling/archive/v{{ version }}.tar.gz
   sha256: {{ sha256 }}
   patches:
@@ -59,8 +58,7 @@ about:
   dev_url: https://github.com/root-project/cling
   doc_url: https://root.cern.ch/cling
   home: https://root.cern.ch/cling
-  license: UI/NCSAOSL
-  license_family: BSD
+  license: NCSA OR LGPL-2.1-only
   license_file: LICENSE.TXT
   summary: Cling - The Interactive C++ Interpreter
   description: Cling is an interactive C++ interpreter, built on top of Clang and
