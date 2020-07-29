@@ -32,6 +32,7 @@ requirements:
     - cmake
     - ninja  # [win]
     - {{ compiler('cxx') }}
+    - make
   host:
     - llvmdev {{ clang_version[0] }}
     - clangdev {{ clang_version|join('.') }}
@@ -42,8 +43,7 @@ requirements:
     #  - the host compiler STL is one to be used.
     #  - it is used by cling's runtime compatibility check.
     - {{ compiler('cxx') }}  # [linux]
-    - clangdev {{ clang_version|join('.') }}
-    - clang_variant * cling_v{{ version }}
+    - sysroot_linux-64  # [linux]
 
 test:
   commands:
