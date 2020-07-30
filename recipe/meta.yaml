@@ -1,7 +1,7 @@
 {% set name = "cling" %}
 {% set version = "0.6" %}
 {% set sha256 = "c72efd121f65afb0bf2744d4871fd9758f265a750ce921fdef767c8ab9a0fa36" %}
-{% set build_number = 2 %}
+{% set build_number = 3 %}
 {% set clang_version = [5, 0, 0] %}
 
 package:
@@ -9,7 +9,6 @@ package:
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tar.gz
   url: https://github.com/root-project/cling/archive/v{{ version }}.tar.gz
   sha256: {{ sha256 }}
   patches:
@@ -32,6 +31,7 @@ requirements:
     - cmake
     - ninja  # [win]
     - {{ compiler('cxx') }}
+    - make
   host:
     - llvmdev {{ clang_version[0] }}
     - clangdev {{ clang_version|join('.') }}
@@ -44,6 +44,7 @@ requirements:
     - {{ compiler('cxx') }}  # [linux]
     - clangdev {{ clang_version|join('.') }}
     - clang_variant * cling_v{{ version }}
+    - sysroot_linux-64  # [linux]
 
 test:
   commands:
@@ -57,8 +58,7 @@ about:
   dev_url: https://github.com/root-project/cling
   doc_url: https://root.cern.ch/cling
   home: https://root.cern.ch/cling
-  license: UI/NCSAOSL
-  license_family: BSD
+  license: NCSA OR LGPL-2.1-only
   license_file: LICENSE.TXT
   summary: Cling - The Interactive C++ Interpreter
   description: Cling is an interactive C++ interpreter, built on top of Clang and
