@@ -3,7 +3,7 @@ About cling
 
 Home: https://root.cern.ch/cling
 
-Package license: UI/NCSAOSL
+Package license: NCSA OR LGPL-2.1-only
 
 Feedstock license: BSD-3-Clause
 
