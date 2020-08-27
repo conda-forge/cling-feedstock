@@ -19,6 +19,8 @@ source:
     - patches/0027-conda-packaging.patch
     # Prevent setting sysroot include directory on OS Xd
     - patches/0001-Drop-compile-time-sysroot.patch
+    # Include windows.h
+    - patches/0001-windows-include.patch
 
 build:
   number: {{ build_number }}
