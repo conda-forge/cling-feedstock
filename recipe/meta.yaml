@@ -1,7 +1,7 @@
 {% set name = "cling" %}
 {% set version = "0.7" %}
 {% set sha256 = "cb72186edd8b1ccc0662542c70b02725891e2405aecd5631066972e421b51259" %}
-{% set build_number = 0 %}
+{% set build_number = 1 %}
 {% set clang_version = [5, 0, 0] %}
 
 package:
@@ -21,6 +21,8 @@ source:
     - patches/0001-Drop-compile-time-sysroot.patch
     # Include windows.h
     - patches/0001-windows-include.patch
+    # Enable redefinitions
+    - patches/enable-redefinition-allowed.patch
 
 build:
   number: {{ build_number }}

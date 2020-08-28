@@ -1,0 +1,13 @@
+diff --git lib/Interpreter/Interpreter.cpp lib/Interpreter/Interpreter.cpp
+index 4ae8e45d..ea6242e8 100644
+--- lib/Interpreter/Interpreter.cpp
++++ lib/Interpreter/Interpreter.cpp
+@@ -207,7 +207,7 @@ namespace cling {
+     m_UniqueCounter(parentInterp ? parentInterp->m_UniqueCounter + 1 : 0),
+     m_PrintDebug(false), m_DynamicLookupDeclared(false),
+     m_DynamicLookupEnabled(false), m_RawInputEnabled(false),
+-    m_RedefinitionAllowed(false),
++    m_RedefinitionAllowed(true),
+     m_OptLevel(parentInterp ? parentInterp->m_OptLevel : -1) {
+
+     if (handleSimpleOptions(m_Opts))
