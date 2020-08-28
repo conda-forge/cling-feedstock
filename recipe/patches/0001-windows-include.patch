@@ -1,0 +1,24 @@
+From 357a81f138130482448567268bb14d6d2344fe8e Mon Sep 17 00:00:00 2001
+From: Sylvain Corlay <sylvain.corlay@gmail.com>
+Date: Fri, 28 Aug 2020 00:32:09 +0200
+Subject: [PATCH] windows-include
+
+---
+ lib/Interpreter/DynamicLibraryManagerSymbol.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lib/Interpreter/DynamicLibraryManagerSymbol.cpp b/lib/Interpreter/DynamicLibraryManagerSymbol.cpp
+index cbe1a983..344b11c6 100644
+--- a/lib/Interpreter/DynamicLibraryManagerSymbol.cpp
++++ b/lib/Interpreter/DynamicLibraryManagerSymbol.cpp
+@@ -36,6 +36,7 @@
+ #endif // __APPLE__
+ 
+ #ifdef LLVM_ON_WIN32
++#include <windows.h>
+ #include <libloaderapi.h> // For GetModuleFileNameA
+ #include <memoryapi.h> // For VirtualQuery
+ #endif
+-- 
+2.28.0
+

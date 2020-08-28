@@ -1,5 +1,3 @@
-set "CXXFLAGS= -MD"
-
 mkdir build
 cd build
 

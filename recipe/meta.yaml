@@ -1,7 +1,7 @@
 {% set name = "cling" %}
-{% set version = "0.6" %}
-{% set sha256 = "c72efd121f65afb0bf2744d4871fd9758f265a750ce921fdef767c8ab9a0fa36" %}
-{% set build_number = 3 %}
+{% set version = "0.7" %}
+{% set sha256 = "cb72186edd8b1ccc0662542c70b02725891e2405aecd5631066972e421b51259" %}
+{% set build_number = 0 %}
 {% set clang_version = [5, 0, 0] %}
 
 package:
@@ -19,10 +19,12 @@ source:
     - patches/0027-conda-packaging.patch
     # Prevent setting sysroot include directory on OS Xd
     - patches/0001-Drop-compile-time-sysroot.patch
+    # Include windows.h
+    - patches/0001-windows-include.patch
 
 build:
   number: {{ build_number }}
-  skip: True  # [win and vc<14]
+  skip: true  # [win and vc<14]
   run_exports:
     - {{ pin_subpackage(name, max_pin='x.x') }}
 
@@ -61,11 +63,8 @@ about:
   license: NCSA OR LGPL-2.1-only
   license_file: LICENSE.TXT
   summary: Cling - The Interactive C++ Interpreter
-  description: Cling is an interactive C++ interpreter, built on top of Clang and
-    LLVM compiler infrastructure. Cling realizes the read-eval-print loop (REPL)
-    concept, in order to leverage rapid application development. Implemented as
-    a small extension to LLVM and Clang, the interpreter reuses their strengths
-    such as the praised concise and expressive compiler diagnostics.
+  description: Cling is an interactive C++ interpreter, built on top of Clang and LLVM compiler infrastructure. Cling realizes the read-eval-print loop (REPL) concept, in order to leverage rapid application development. Implemented as a small extension to LLVM and Clang, the interpreter reuses their strengths such as the
+    praised concise and expressive compiler diagnostics.
 
 extra:
   recipe-maintainers:
