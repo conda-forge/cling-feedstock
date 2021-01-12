@@ -1,13 +1,13 @@
-diff --git lib/Interpreter/Interpreter.cpp lib/Interpreter/Interpreter.cpp
-index 4ae8e45d..ea6242e8 100644
---- lib/Interpreter/Interpreter.cpp
-+++ lib/Interpreter/Interpreter.cpp
-@@ -207,7 +207,7 @@ namespace cling {
-     m_UniqueCounter(parentInterp ? parentInterp->m_UniqueCounter + 1 : 0),
-     m_PrintDebug(false), m_DynamicLookupDeclared(false),
-     m_DynamicLookupEnabled(false), m_RawInputEnabled(false),
--    m_RedefinitionAllowed(false),
-+    m_RedefinitionAllowed(true),
-     m_OptLevel(parentInterp ? parentInterp->m_OptLevel : -1) {
-
-     if (handleSimpleOptions(m_Opts))
+diff --git a/include/cling/Interpreter/RuntimeOptions.h b/include/cling/Interpreter/RuntimeOptions.h
+index 0240bd14..4dc12cbb 100644
+--- a/include/cling/Interpreter/RuntimeOptions.h
++++ b/include/cling/Interpreter/RuntimeOptions.h
+@@ -14,7 +14,7 @@ namespace cling {
+     /// \brief Interpreter configuration bits that can be changed at run-time
+     /// by the user, e.g. to enable/disable extensions.
+     struct RuntimeOptions {
+-      RuntimeOptions() : AllowRedefinition(0) {}
++      RuntimeOptions() : AllowRedefinition(1) {}
+ 
+       /// \brief Allow the user to redefine entities (requests enabling the
+       /// `DefinitionShadower` AST transformer).
