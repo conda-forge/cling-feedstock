@@ -36,7 +36,7 @@ requirements:
     - make
   host:
     - llvmdev {{ clang_version[0] }}
-    - clangdev {{ clang_version|join('.') }} root_v62400*
+    - clangdev {{ clang_version|join('.') }} root_62400*
     - zlib
   run:
     # We really depend on the host compiler at runtime:
