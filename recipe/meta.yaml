@@ -2,7 +2,7 @@
 {% set version = "0.9" %}
 {% set sha256 = "5fe545b4ca2884dc861e1241f2ae7b975b60514062675995cfbc401e3b3e8258" %}
 {% set build_number = 0 %}
-{% set clang_version = [5, 0, 0] %}
+{% set clang_version = [9, 0, 1] %}
 
 package:
   name: {{ name|lower }}
@@ -36,8 +36,7 @@ requirements:
     - make
   host:
     - llvmdev {{ clang_version[0] }}
-    - clangdev {{ clang_version|join('.') }}
-    - clang_variant * cling_v{{ version }}
+    - clangdev {{ clang_version|join('.') }} root_v62400*
     - zlib
   run:
     # We really depend on the host compiler at runtime:
@@ -45,7 +44,6 @@ requirements:
     #  - it is used by cling's runtime compatibility check.
     - {{ compiler('cxx') }}  # [linux]
     - clangdev {{ clang_version|join('.') }}
-    - clang_variant * cling_v{{ version }}
     - sysroot_linux-64  # [linux]
 
 test:
