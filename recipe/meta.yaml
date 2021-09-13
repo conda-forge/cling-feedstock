@@ -1,7 +1,7 @@
 {% set name = "cling" %}
 {% set version = "0.8" %}
 {% set sha256 = "0820fbb88066bd0ffd76d183c80c146ee4a5ef455414aa20622bb6d5747ecfb6" %}
-{% set build_number = 0 %}
+{% set build_number = 1 %}
 {% set clang_version = [5, 0, 0] %}
 
 package:
