@@ -21,6 +21,9 @@ source:
     - patches/0001-Drop-compile-time-sysroot.patch
     # Enable redefinitions
     - patches/enable-redefinition-allowed.patch
+    # LLVM_REQUIES_EH
+    - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
+
 
 build:
   number: {{ build_number }}
