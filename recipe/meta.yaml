@@ -24,7 +24,7 @@ source:
 
 build:
   number: {{ build_number }}
-  skip: true  # [win and vc<14]
+  skip: true  # [win and vc<14 or aarch64]
   run_exports:
     - {{ pin_subpackage(name, max_pin='x.x') }}
 
