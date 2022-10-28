@@ -23,6 +23,8 @@ source:
     - patches/enable-redefinition-allowed.patch
     # LLVM_REQUIES_EH
     - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
+    # Fix incorrect dylib interactions
+    - patches/0001-Fix-LLVM_DYLIB-usage.patch
 
 
 build:
