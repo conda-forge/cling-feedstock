@@ -1,8 +1,8 @@
 {% set name = "cling" %}
-{% set version = "0.8" %}
-{% set sha256 = "0820fbb88066bd0ffd76d183c80c146ee4a5ef455414aa20622bb6d5747ecfb6" %}
-{% set build_number = 2 %}
-{% set clang_version = [5, 0, 0] %}
+{% set version = "0.9" %}
+{% set sha256 = "5fe545b4ca2884dc861e1241f2ae7b975b60514062675995cfbc401e3b3e8258" %}
+{% set build_number = 0 %}
+{% set clang_version = [9, 0, 1] %}
 
 package:
   name: {{ name|lower }}
@@ -21,6 +21,11 @@ source:
     - patches/0001-Drop-compile-time-sysroot.patch
     # Enable redefinitions
     - patches/enable-redefinition-allowed.patch
+    # LLVM_REQUIES_EH
+    - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
+    # Fix incorrect dylib interactions
+    - patches/0001-Fix-LLVM_DYLIB-usage.patch
+
 
 build:
   number: {{ build_number }}
@@ -35,17 +40,15 @@ requirements:
     - {{ compiler('cxx') }}
     - make
   host:
-    - llvmdev {{ clang_version[0] }}
-    - clangdev {{ clang_version|join('.') }}
-    - clang_variant * cling_v{{ version }}
+    - llvmdev {{ clang_version|join('.') }} cling_v{{ version }}*
+    - clangdev {{ clang_version|join('.') }} cling_v{{ version }}*
     - zlib
   run:
     # We really depend on the host compiler at runtime:
     #  - the host compiler STL is one to be used.
     #  - it is used by cling's runtime compatibility check.
     - {{ compiler('cxx') }}  # [linux]
-    - clangdev {{ clang_version|join('.') }}
-    - clang_variant * cling_v{{ version }}
+    - clangdev {{ clang_version|join('.') }} cling_v{{ version }}*
   run_constrained:
    # For C++14/C++17 headers from GCC 9.5.0 cannot be parsed due to a missing commit:
     # https://github.com/gcc-mirror/gcc/commit/32bbf76e4345a7961445b86a7cfccffa8a287fc1
