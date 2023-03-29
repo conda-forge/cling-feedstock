@@ -1,11 +1,11 @@
-About cling
-===========
+About cling-feedstock
+=====================
+
+Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/cling-feedstock/blob/main/LICENSE.txt)
 
 Home: https://root.cern.ch/cling
 
 Package license: NCSA OR LGPL-2.1-only
-
-Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/cling-feedstock/blob/main/LICENSE.txt)
 
 Summary: Cling - The Interactive C++ Interpreter
 
