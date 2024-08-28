@@ -1,7 +1,7 @@
 {% set name = "cling" %}
-{% set version = "0.9" %}
-{% set sha256 = "5fe545b4ca2884dc861e1241f2ae7b975b60514062675995cfbc401e3b3e8258" %}
-{% set build_number = 1 %}
+{% set version = "1.1" %}
+{% set sha256 = "e8b33b5e99c6267a85be71fc6eb8e5622ce8aee864c60587cb71f43c27e97032" %}
+{% set build_number = 0 %}
 {% set clang_version = [9, 0, 1] %}
 
 package:
@@ -50,11 +50,11 @@ requirements:
     #  - the host compiler STL is one to be used.
     #  - it is used by cling's runtime compatibility check.
     - {{ compiler('cxx') }}  # [linux]
+    - {{ stdlib("c") }}    # [linux]
     - clangdev {{ clang_version|join('.') }} cling_v{{ version }}*
   run_constrained:
    # For C++14/C++17 headers from GCC 9.5.0 cannot be parsed due to a missing commit:
     # https://github.com/gcc-mirror/gcc/commit/32bbf76e4345a7961445b86a7cfccffa8a287fc1
-    - gxx_linux-64 !=9.5.0  # [clangdev == "5.*"] - sysroot_linux-64  # [linux]
 
 test:
   commands:
@@ -71,7 +71,8 @@ about:
   license: NCSA OR LGPL-2.1-only
   license_file: LICENSE.TXT
   summary: Cling - The Interactive C++ Interpreter
-  description: Cling is an interactive C++ interpreter, built on top of Clang and LLVM compiler infrastructure. Cling realizes the read-eval-print loop (REPL) concept, in order to leverage rapid application development. Implemented as a small extension to LLVM and Clang, the interpreter reuses their strengths such as the praised concise and expressive compiler diagnostics.
+  description: Cling is an interactive C++ interpreter, built on top of Clang and LLVM compiler infrastructure. Cling realizes the read-eval-print loop (REPL) concept, in order to leverage rapid application development. Implemented as a small extension to LLVM and Clang, the interpreter reuses their strengths such as the
+    praised concise and expressive compiler diagnostics.
 
 extra:
   recipe-maintainers:
