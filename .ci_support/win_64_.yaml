@@ -9,4 +9,4 @@ target_platform:
 vc:
 - '14'
 zlib:
-- '1.2'
+- '1'
