@@ -1,16 +1,14 @@
-{% set name = "cling" %}
 {% set version = "0.9" %}
-{% set sha256 = "5fe545b4ca2884dc861e1241f2ae7b975b60514062675995cfbc401e3b3e8258" %}
 {% set build_number = 1 %}
-{% set clang_version = [9, 0, 1] %}
+{% set clang_version = "9.0.1" %}
 
 package:
-  name: {{ name|lower }}
+  name: cling
   version: {{ version }}
 
 source:
   url: https://github.com/root-project/cling/archive/v{{ version }}.tar.gz
-  sha256: {{ sha256 }}
+  sha256: 5fe545b4ca2884dc861e1241f2ae7b975b60514062675995cfbc401e3b3e8258
   patches:
     # Export all symbols on windows to generate import library
     - patches/0001-Export-all-symbols-on-windows.patch
@@ -33,7 +31,7 @@ build:
   number: {{ build_number }}
   skip: true  # [win and vc<14 or aarch64]
   run_exports:
-    - {{ pin_subpackage(name, max_pin='x.x') }}
+    - {{ pin_subpackage("cling", max_pin='x.x') }}
 
 requirements:
   build:
@@ -42,15 +40,15 @@ requirements:
     - {{ compiler('cxx') }}
     - make
   host:
-    - llvmdev {{ clang_version|join('.') }} cling_v{{ version }}*
-    - clangdev {{ clang_version|join('.') }} cling_v{{ version }}*
+    - llvmdev {{ clang_version }} cling_v{{ version }}*
+    - clangdev {{ clang_version }} cling_v{{ version }}*
     - zlib
   run:
     # We really depend on the host compiler at runtime:
     #  - the host compiler STL is one to be used.
     #  - it is used by cling's runtime compatibility check.
     - {{ compiler('cxx') }}  # [linux]
-    - clangdev {{ clang_version|join('.') }} cling_v{{ version }}*
+    - clangdev {{ clang_version }} cling_v{{ version }}*
   run_constrained:
    # For C++14/C++17 headers from GCC 9.5.0 cannot be parsed due to a missing commit:
     # https://github.com/gcc-mirror/gcc/commit/32bbf76e4345a7961445b86a7cfccffa8a287fc1
