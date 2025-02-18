@@ -33,10 +33,10 @@ requirements:
     - ninja
     - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
-    - llvmdev   # [build_platform != target_platform]
-    - libxml2   # [build_platform != target_platform]
-    - zlib      # [build_platform != target_platform]
-    - zstd      # [build_platform != target_platform]
+    - llvmdev {{ clang_version }}   # [build_platform != target_platform]
+    - libxml2                       # [build_platform != target_platform]
+    - zlib                          # [build_platform != target_platform]
+    - zstd                          # [build_platform != target_platform]
   host:
     - clangdev ={{ clang_version }}=cling_1.*
     - llvmdev
