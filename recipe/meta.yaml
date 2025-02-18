@@ -14,17 +14,12 @@ source:
     - patches/0001-Export-all-symbols-on-windows.patch
     # Do not build Jupyter kernel - use xeus-cling instead
     - patches/0002-remove-jupyter.patch
-    - patches/0003-conda-packaging.patch
     # Prevent setting sysroot include directory on OS X
-    - patches/0004-Drop-compile-time-sysroot.patch
+    - patches/0003-Drop-compile-time-sysroot.patch
     # Enable redefinitions
-    - patches/0005-enable-redefinition-allowed.patch
+    - patches/0004-enable-redefinition-allowed.patch
     # LLVM_REQUIES_EH
-    - patches/0006-Set-LLVM_REQUIRES_EH-for-Cling.patch
-    # Fix incorrect dylib interactions
-    - patches/0007-Fix-LLVM_DYLIB-usage.patch
-    # Install ClingTargets.cmake
-    - patches/0008-Fix-ClingTargets.cmake-not-being-installed.patch
+    - patches/0005-Set-LLVM_REQUIRES_EH-for-Cling.patch
 
 
 build:
