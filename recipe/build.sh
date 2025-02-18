@@ -1,4 +1,5 @@
 #!/bin/bash
+set -ex
 
 mkdir build
 cd build
@@ -24,5 +25,5 @@ cmake -G Ninja \
   -DCMAKE_BUILD_TYPE=Release \
   $SRC_DIR
 
-make -j${CPU_COUNT}
-make install
+cmake --build . -j${CPU_COUNT}
+cmake --install .
