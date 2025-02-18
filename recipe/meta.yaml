@@ -34,6 +34,10 @@ requirements:
     - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
     - make
+    - llvmdev   # [build_platform != target_platform]
+    - libxml2   # [build_platform != target_platform]
+    - zlib      # [build_platform != target_platform]
+    - zstd      # [build_platform != target_platform]
   host:
     - clangdev ={{ clang_version }}=cling_1.*
     - llvmdev
