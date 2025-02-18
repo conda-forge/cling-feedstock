@@ -36,14 +36,14 @@ requirements:
     - {{ compiler('cxx') }}
     - make
   host:
-    - clangdev {{ clang_version }} cling_v{{ version }}*
+    - clangdev ={{ clang_version }}=cling_{{ version }}.*
     - zlib
   run:
     # We really depend on the host compiler at runtime:
     #  - the host compiler STL is one to be used.
     #  - it is used by cling's runtime compatibility check.
     - {{ compiler('cxx') }}  # [linux]
-    - clangdev {{ clang_version }} cling_v{{ version }}*
+    - clangdev ={{ clang_version }}=cling_{{ version }}.*
 
 test:
   commands:
