@@ -13,7 +13,8 @@ else
   rm -rf $BUILD_PREFIX/bin/llvm-tblgen
 fi
 
-cmake \
+cmake -G Ninja \
+  $CMAKE_ARGS \
   -DCMAKE_INSTALL_PREFIX=${PREFIX} \
   -DCMAKE_PREFIX_PATH=${PREFIX} \
   -DCMAKE_INSTALL_RPATH=${PREFIX}/lib \

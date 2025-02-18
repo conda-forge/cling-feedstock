@@ -30,10 +30,9 @@ build:
 requirements:
   build:
     - cmake
-    - ninja  # [win]
+    - ninja
     - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
-    - make
     - llvmdev   # [build_platform != target_platform]
     - libxml2   # [build_platform != target_platform]
     - zlib      # [build_platform != target_platform]
