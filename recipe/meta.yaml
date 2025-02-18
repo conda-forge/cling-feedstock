@@ -36,7 +36,6 @@ requirements:
     - {{ compiler('cxx') }}
     - make
   host:
-    - llvmdev {{ clang_version }} cling_v{{ version }}*
     - clangdev {{ clang_version }} cling_v{{ version }}*
     - zlib
   run:
