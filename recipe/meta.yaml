@@ -37,7 +37,9 @@ requirements:
     - make
   host:
     - clangdev ={{ clang_version }}=cling_{{ version }}.*
+    - llvmdev
     - zlib
+    - zstd
   run:
     # We really depend on the host compiler at runtime:
     #  - the host compiler STL is one to be used.
