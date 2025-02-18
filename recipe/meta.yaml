@@ -37,6 +37,7 @@ requirements:
   host:
     - clangdev ={{ clang_version }}=cling_{{ version }}.*
     - llvmdev
+    - llvm
     - zlib
     - zstd
   run:
