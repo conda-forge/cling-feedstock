@@ -44,10 +44,6 @@ requirements:
     #  - it is used by cling's runtime compatibility check.
     - {{ compiler('cxx') }}  # [linux]
     - clangdev {{ clang_version }} cling_v{{ version }}*
-  run_constrained:
-   # For C++14/C++17 headers from GCC 9.5.0 cannot be parsed due to a missing commit:
-    # https://github.com/gcc-mirror/gcc/commit/32bbf76e4345a7961445b86a7cfccffa8a287fc1
-    - gxx_linux-64 !=9.5.0  # [clangdev == "5.*"] - sysroot_linux-64  # [linux]
 
 test:
   commands:
