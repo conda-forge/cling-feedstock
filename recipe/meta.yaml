@@ -24,7 +24,6 @@ source:
 
 build:
   number: {{ build_number }}
-  skip: true  # [win and vc<14 or aarch64]
   run_exports:
     - {{ pin_subpackage("cling", max_pin='x.x') }}
 
