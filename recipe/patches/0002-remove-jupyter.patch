@@ -1,0 +1,23 @@
+From 424e9b704db27e57e03f63d079e6c26f83b6f14f Mon Sep 17 00:00:00 2001
+From: Sylvain Corlay <sylvain.corlay@gmail.com>
+Date: Mon, 13 Sep 2021 23:20:38 +0200
+Subject: [PATCH 2/8] remove-jupyter
+
+---
+ tools/CMakeLists.txt | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index 67881875..aa7726df 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -9,9 +9,7 @@
+ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../lib/UserInterface/textinput
+    OR CLING_INCLUDE_TESTS)
+   add_subdirectory(driver)
+-  add_subdirectory(Jupyter)
+   add_subdirectory(libcling)
+-  add_subdirectory(demo)
+ endif()
+ 
+ add_subdirectory(plugins)
