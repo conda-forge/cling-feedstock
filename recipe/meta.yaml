@@ -32,6 +32,7 @@ requirements:
   build:
     - cmake
     - ninja  # [win]
+    - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
     - make
   host:
