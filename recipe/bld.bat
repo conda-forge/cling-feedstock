@@ -1,6 +1,9 @@
 mkdir build
 cd build
 
+:: build stumbles over this somehow
+del /s /q %LIBRARY_LIB%\cmake\llvm\Findzstd.cmake
+
 cmake -G "Ninja" ^
       -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% ^
       -DCMAKE_BUILD_TYPE=Release ^

@@ -1,60 +1,54 @@
-{% set name = "cling" %}
-{% set version = "0.9" %}
-{% set sha256 = "5fe545b4ca2884dc861e1241f2ae7b975b60514062675995cfbc401e3b3e8258" %}
-{% set build_number = 1 %}
-{% set clang_version = [9, 0, 1] %}
+{% set version = "1.2" %}
+{% set build_number = 0 %}
+{% set clang_version = "18.1.8" %}
 
 package:
-  name: {{ name|lower }}
+  name: cling
   version: {{ version }}
 
 source:
   url: https://github.com/root-project/cling/archive/v{{ version }}.tar.gz
-  sha256: {{ sha256 }}
+  sha256: beee8e461424d267ee2dec88b3de57326bc8e3470b4ceae2744de7d3d3aba1eb
   patches:
     # Export all symbols on windows to generate import library
     - patches/0001-Export-all-symbols-on-windows.patch
     # Do not build Jupyter kernel - use xeus-cling instead
-    - patches/0001-remove-jupyter.patch
-    - patches/0027-conda-packaging.patch
+    - patches/0002-remove-jupyter.patch
     # Prevent setting sysroot include directory on OS X
-    - patches/0001-Drop-compile-time-sysroot.patch
+    - patches/0003-Drop-compile-time-sysroot.patch
     # Enable redefinitions
-    - patches/enable-redefinition-allowed.patch
+    - patches/0004-enable-redefinition-allowed.patch
     # LLVM_REQUIES_EH
-    - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
-    # Fix incorrect dylib interactions
-    - patches/0001-Fix-LLVM_DYLIB-usage.patch
-    # Install ClingTargets.cmake
-    - patches/0001-Fix-ClingTargets.cmake-not-being-installed.patch
+    - patches/0005-Set-LLVM_REQUIRES_EH-for-Cling.patch
 
 
 build:
   number: {{ build_number }}
-  skip: true  # [win and vc<14 or aarch64]
   run_exports:
-    - {{ pin_subpackage(name, max_pin='x.x') }}
+    - {{ pin_subpackage("cling", max_pin='x.x') }}
 
 requirements:
   build:
     - cmake
-    - ninja  # [win]
+    - ninja
+    - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
-    - make
+    - llvmdev {{ clang_version }}   # [build_platform != target_platform]
+    - libxml2                       # [build_platform != target_platform]
+    - zlib                          # [build_platform != target_platform]
+    - zstd                          # [build_platform != target_platform]
   host:
-    - llvmdev {{ clang_version|join('.') }} cling_v{{ version }}*
-    - clangdev {{ clang_version|join('.') }} cling_v{{ version }}*
+    - clangdev ={{ clang_version }}=cling_1.*
+    - llvmdev
+    - llvm
     - zlib
+    - zstd
   run:
     # We really depend on the host compiler at runtime:
     #  - the host compiler STL is one to be used.
     #  - it is used by cling's runtime compatibility check.
     - {{ compiler('cxx') }}  # [linux]
-    - clangdev {{ clang_version|join('.') }} cling_v{{ version }}*
-  run_constrained:
-   # For C++14/C++17 headers from GCC 9.5.0 cannot be parsed due to a missing commit:
-    # https://github.com/gcc-mirror/gcc/commit/32bbf76e4345a7961445b86a7cfccffa8a287fc1
-    - gxx_linux-64 !=9.5.0  # [clangdev == "5.*"] - sysroot_linux-64  # [linux]
+    - clangdev ={{ clang_version }}=cling_1.*
 
 test:
   commands:
