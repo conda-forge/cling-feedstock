@@ -38,7 +38,7 @@ requirements:
     - zlib                          # [build_platform != target_platform]
     - zstd                          # [build_platform != target_platform]
   host:
-    - clangdev ={{ clang_version }}=cling_{{ version }}.*
+    - clangdev {{ clang_version }} cling_{{ version }}*
     - llvmdev
     - llvm
     - zlib
@@ -48,7 +48,7 @@ requirements:
     #  - the host compiler STL is one to be used.
     #  - it is used by cling's runtime compatibility check.
     - {{ compiler('cxx') }}  # [linux]
-    - clangdev ={{ clang_version }}=cling_{{ version }}.*
+    - clangdev {{ clang_version }} cling_{{ version }}*
 
 test:
   commands:
