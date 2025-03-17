@@ -1,6 +1,6 @@
-{% set version = "1.2" %}
-{% set build_number = 1 %}
-{% set clang_version = "18.1.8" %}
+{% set version = "1.0" %}
+{% set build_number = 0 %}
+{% set clang_version = "13.0.1" %}
 
 package:
   name: cling
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://github.com/root-project/cling/archive/v{{ version }}.tar.gz
-  sha256: beee8e461424d267ee2dec88b3de57326bc8e3470b4ceae2744de7d3d3aba1eb
+  sha256: 93252c72bae2a660d9e2c718af18b767a09928078a854b2fcd77f28cc9fa71ae
   patches:
     # Export all symbols on windows to generate import library
     - patches/0001-Export-all-symbols-on-windows.patch
@@ -20,7 +20,6 @@ source:
     - patches/0004-enable-redefinition-allowed.patch
     # LLVM_REQUIES_EH
     - patches/0005-Set-LLVM_REQUIRES_EH-for-Cling.patch
-
 
 build:
   number: {{ build_number }}
