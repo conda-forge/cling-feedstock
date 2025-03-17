@@ -1,0 +1,24 @@
+From 27bef38605fa4bebd88865d284122a026db3178d Mon Sep 17 00:00:00 2001
+From: Duncan Ogilvie <mr.exodia.tpodt@gmail.com>
+Date: Tue, 25 Oct 2022 12:05:55 +0200
+Subject: [PATCH 8/8] Fix ClingTargets.cmake not being installed
+
+The property CLING_HAS_EXPORTS seems to be a leftover, there are no references to it in the codebase.
+---
+ cmake/modules/CMakeLists.txt | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/cmake/modules/CMakeLists.txt b/cmake/modules/CMakeLists.txt
+index 1e31e451..a5e7cfdb 100644
+--- a/cmake/modules/CMakeLists.txt
++++ b/cmake/modules/CMakeLists.txt
+@@ -53,8 +53,7 @@ set(CLING_CONFIG_CMAKE_DIR)
+ set(CLING_CONFIG_EXPORTS_FILE)
+ 
+ if (NOT LLVM_INSTALL_TOOLCHAIN_ONLY)
+-  get_property(cling_has_exports GLOBAL PROPERTY CLING_HAS_EXPORTS)
+-  if(cling_has_exports)
++  if(CLING_EXPORTS)
+     install(EXPORT ClingTargets DESTINATION ${CLING_INSTALL_PACKAGE_DIR}
+             COMPONENT cling-cmake-exports)
+   endif()

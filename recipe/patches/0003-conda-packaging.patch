@@ -1,0 +1,35 @@
+From c55a383f2133078811cd5cd5b2d7a63e16865c0d Mon Sep 17 00:00:00 2001
+From: gouarin <loic.gouarin@gmail.com>
+Date: Tue, 28 Nov 2017 13:51:23 +0100
+Subject: [PATCH 3/8] conda packaging
+
+---
+ CMakeLists.txt                      | 2 ++
+ lib/UserInterface/UserInterface.cpp | 1 +
+ 2 files changed, 3 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 416a8a69..589d6575 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -42,6 +42,8 @@ if( CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR )
+     message(FATAL_ERROR "llvm-config not found -- ${LLVM_CONFIG}")
+   endif()
+ 
++  find_package(Clang REQUIRED)
++
+   list(GET CONFIG_OUTPUT 0 ENABLE_ASSERTIONS)
+   list(GET CONFIG_OUTPUT 1 TOOLS_BINARY_DIR)
+   list(GET CONFIG_OUTPUT 2 LIBRARY_DIR)
+diff --git a/lib/UserInterface/UserInterface.cpp b/lib/UserInterface/UserInterface.cpp
+index d30930df..f3ec2d29 100644
+--- a/lib/UserInterface/UserInterface.cpp
++++ b/lib/UserInterface/UserInterface.cpp
+@@ -20,6 +20,7 @@
+ #include "llvm/ADT/SmallString.h"
+ #include "llvm/Support/ErrorHandling.h"
+ #include "llvm/Support/Path.h"
++#include "llvm/Config/llvm-config.h"
+ 
+ #include "clang/Basic/LangOptions.h"
+ #include "clang/Frontend/CompilerInstance.h"
