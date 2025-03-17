@@ -21,10 +21,6 @@ source:
     - patches/0005-enable-redefinition-allowed.patch
     # LLVM_REQUIES_EH
     - patches/0006-Set-LLVM_REQUIRES_EH-for-Cling.patch
-    # Fix incorrect dylib interactions
-    - patches/0007-Fix-LLVM_DYLIB-usage.patch
-    # Install ClingTargets.cmake
-    - patches/0008-Fix-ClingTargets.cmake-not-being-installed.patch
 
 build:
   number: {{ build_number }}

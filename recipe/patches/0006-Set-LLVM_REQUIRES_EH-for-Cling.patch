@@ -1,17 +1,17 @@
-From 1f6c3bfc2127a2abe910bdad42f03271873fa36a Mon Sep 17 00:00:00 2001
+From 72eca611a6a1e5c39c4b6f7e53fa472fcd79f33e Mon Sep 17 00:00:00 2001
 From: Chris Burr <christopher.burr@cern.ch>
 Date: Mon, 19 Apr 2021 15:23:24 +0200
-Subject: [PATCH 6/8] Set LLVM_REQUIRES_EH for Cling
+Subject: [PATCH 6/6] Set LLVM_REQUIRES_EH for Cling
 
 ---
  CMakeLists.txt | 2 ++
  1 file changed, 2 insertions(+)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 589d6575..6c37e83a 100644
+index 2b736d1e..c2c9c0e1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -92,6 +92,8 @@ if( CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR )
+@@ -90,6 +90,8 @@ if( CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR )
    option(LLVM_FORCE_USE_OLD_HOST_TOOLCHAIN
      "Set to ON to force using an old, unsupported host toolchain." OFF)
  
