@@ -1,6 +1,6 @@
-{% set version = "1.0" %}
+{% set version = "1.1" %}
 {% set build_number = 0 %}
-{% set clang_version = "13.0.1" %}
+{% set clang_version = "16.0.6" %}
 
 package:
   name: cling
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://github.com/root-project/cling/archive/v{{ version }}.tar.gz
-  sha256: 93252c72bae2a660d9e2c718af18b767a09928078a854b2fcd77f28cc9fa71ae
+  sha256: e8b33b5e99c6267a85be71fc6eb8e5622ce8aee864c60587cb71f43c27e97032
   patches:
     # Export all symbols on windows to generate import library
     - patches/0001-Export-all-symbols-on-windows.patch
