@@ -6,6 +6,7 @@ cd build
 
 if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
   CMAKE_ARGS="${CMAKE_ARGS} -DLLVM_TOOLS_BINARY_DIR=$BUILD_PREFIX/bin -DLLVM_TABLEGEN_EXE=$BUILD_PREFIX/bin/llvm-tblgen"
+  CMAKE_ARGS="${CMAKE_ARGS} -DLLVM_CONFIG=$BUILD_PREFIX/bin/llvm-config"
 else
   rm -rf $BUILD_PREFIX/bin/llvm-tblgen
 fi
