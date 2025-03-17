@@ -7,6 +7,15 @@ cd build
 if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
   CMAKE_ARGS="${CMAKE_ARGS} -DLLVM_TOOLS_BINARY_DIR=$BUILD_PREFIX/bin -DLLVM_TABLEGEN_EXE=$BUILD_PREFIX/bin/llvm-tblgen"
   CMAKE_ARGS="${CMAKE_ARGS} -DLLVM_CONFIG=$BUILD_PREFIX/bin/llvm-config"
+  # cling detects the build compiler/c++ headers and remembers it; this is incorrect for cross-compilation
+  CMAKE_ARGS="${CMAKE_ARGS} -DCLING_CXX_PATH=$PREFIX/bin/clang"
+  if [[ "$target_platform" == osx* ]]; then
+    # our C++ headers are in $PREFIX/include, rather than $PREFIX/lib/clang/<version>/include
+    CLING_CXX_HEADERS=$PREFIX
+  else
+    CLING_CXX_HEADERS=$($CXX -E -v /dev/null 2>&1 | sed -n 's/^.*--with-gxx-include-dir=\([^ ]*\).*$/\1/p')
+  fi
+  CMAKE_ARGS="${CMAKE_ARGS} -DCLING_CXX_HEADERS=$CLING_CXX_HEADERS"
 else
   rm -rf $BUILD_PREFIX/bin/llvm-tblgen
 fi
