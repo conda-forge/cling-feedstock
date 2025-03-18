@@ -1,7 +1,7 @@
 From b99403a77bcf2829a4a52be2b6ac1597b4b38690 Mon Sep 17 00:00:00 2001
 From: Sylvain Corlay <sylvain.corlay@gmail.com>
 Date: Fri, 6 Dec 2019 18:57:22 +0100
-Subject: [PATCH 4/6] Drop compile-time sysroot
+Subject: [PATCH 4/7] Drop compile-time sysroot
 
 ---
  lib/Interpreter/CIFactory.cpp | 4 ----

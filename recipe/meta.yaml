@@ -21,6 +21,8 @@ source:
     - patches/0005-enable-redefinition-allowed.patch
     # LLVM_REQUIES_EH
     - patches/0006-Set-LLVM_REQUIRES_EH-for-Cling.patch
+    # avoid picking up llvmdir from cross-compilation build environment
+    - patches/0007-don-t-use-stale-llvmdir.patch            # [build_platform != target_platform]
 
 build:
   number: {{ build_number }}
