@@ -11,6 +11,8 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
   CMAKE_ARGS="${CMAKE_ARGS} -DCLING_CXX_PATH=$PREFIX/bin/clang"
   if [[ "$target_platform" == linux* ]]; then
     CLING_CXX_HEADERS="$($CXX -E -v /dev/null 2>&1 | sed -n 's/^.*--with-gxx-include-dir=\([^ ]*\).*$/\1/p')"
+    # this might pick up a stale prefix (e.g. from building gxx itself), so replace that with current prefix
+    CLING_CXX_HEADERS=$PREFIX/$(echo "$CLING_CXX_HEADERS" | sed -E 's:^.*placehold\w+/::')
     echo $CLING_CXX_HEADERS
     CMAKE_ARGS="${CMAKE_ARGS} -DCLING_CXX_HEADERS=$CLING_CXX_HEADERS"
   fi
