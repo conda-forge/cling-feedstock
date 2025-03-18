@@ -38,8 +38,6 @@ requirements:
     - zlib                          # [build_platform != target_platform]
     - zstd                          # [build_platform != target_platform]
   host:
-    # we need the C++ headers matching the compiler version; see CLING_CXX_HEADERS in build.sh
-    - libstdcxx-devel_{{ target_platform }} {{ cxx_compiler_version }}.*  # [aarch64 or ppc64le]
     - clangdev {{ clang_version }} cling_{{ version }}*
     - llvmdev
     - llvm
