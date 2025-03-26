@@ -69,6 +69,7 @@ about:
 
 extra:
   recipe-maintainers:
+    - martinRenou
     - SylvainCorlay
     - JohanMabille
     - gouarin
