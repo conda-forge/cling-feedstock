@@ -1,6 +1,6 @@
-{% set version = "1.2" %}
-{% set build_number = 1 %}
-{% set clang_version = "18.1.8" %}
+{% set version = "1.0" %}
+{% set build_number = 0 %}
+{% set clang_version = "13.0.1" %}
 
 package:
   name: cling
@@ -8,19 +8,21 @@ package:
 
 source:
   url: https://github.com/root-project/cling/archive/v{{ version }}.tar.gz
-  sha256: beee8e461424d267ee2dec88b3de57326bc8e3470b4ceae2744de7d3d3aba1eb
+  sha256: 93252c72bae2a660d9e2c718af18b767a09928078a854b2fcd77f28cc9fa71ae
   patches:
     # Export all symbols on windows to generate import library
     - patches/0001-Export-all-symbols-on-windows.patch
     # Do not build Jupyter kernel - use xeus-cling instead
     - patches/0002-remove-jupyter.patch
+    - patches/0003-conda-packaging.patch
     # Prevent setting sysroot include directory on OS X
-    - patches/0003-Drop-compile-time-sysroot.patch
+    - patches/0004-Drop-compile-time-sysroot.patch
     # Enable redefinitions
-    - patches/0004-enable-redefinition-allowed.patch
+    - patches/0005-enable-redefinition-allowed.patch
     # LLVM_REQUIES_EH
-    - patches/0005-Set-LLVM_REQUIRES_EH-for-Cling.patch
-
+    - patches/0006-Set-LLVM_REQUIRES_EH-for-Cling.patch
+    # avoid picking up llvmdir from cross-compilation build environment
+    - patches/0007-don-t-use-stale-llvmdir.patch            # [build_platform != target_platform]
 
 build:
   number: {{ build_number }}
