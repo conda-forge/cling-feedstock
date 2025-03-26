@@ -1,5 +1,5 @@
 {% set version = "1.2" %}
-{% set build_number = 0 %}
+{% set build_number = 1 %}
 {% set clang_version = "18.1.8" %}
 
 package:
@@ -38,7 +38,7 @@ requirements:
     - zlib                          # [build_platform != target_platform]
     - zstd                          # [build_platform != target_platform]
   host:
-    - clangdev ={{ clang_version }}=cling_1.*
+    - clangdev {{ clang_version }} cling_{{ version }}*
     - llvmdev
     - llvm
     - zlib
@@ -48,7 +48,7 @@ requirements:
     #  - the host compiler STL is one to be used.
     #  - it is used by cling's runtime compatibility check.
     - {{ compiler('cxx') }}  # [linux]
-    - clangdev ={{ clang_version }}=cling_1.*
+    - clangdev {{ clang_version }} cling_{{ version }}*
 
 test:
   commands:
@@ -73,3 +73,4 @@ extra:
     - JohanMabille
     - gouarin
     - chrisburr
+    - h-vetinari

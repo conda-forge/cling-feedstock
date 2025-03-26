@@ -8,4 +8,8 @@ github:
   tooling_branch_name: main
 conda_build:
   pkg_format: '2'
+remote_ci_setup:
+  - conda-forge-ci-setup=4
+  - conda-build>=24.1
+  - libmamba>2.0.5
 test: native_and_emulated
