@@ -1,7 +1,7 @@
 From c9a2bf0c487fec9170090dff168fafd75f1622bb Mon Sep 17 00:00:00 2001
 From: gouarin <loic.gouarin@gmail.com>
 Date: Tue, 28 Nov 2017 13:51:23 +0100
-Subject: [PATCH 3/7] conda packaging
+Subject: [PATCH 03/10] conda packaging
 
 ---
  CMakeLists.txt                      | 2 ++

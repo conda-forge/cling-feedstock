@@ -1,7 +1,7 @@
 From 72eca611a6a1e5c39c4b6f7e53fa472fcd79f33e Mon Sep 17 00:00:00 2001
 From: Chris Burr <christopher.burr@cern.ch>
 Date: Mon, 19 Apr 2021 15:23:24 +0200
-Subject: [PATCH 6/7] Set LLVM_REQUIRES_EH for Cling
+Subject: [PATCH 06/10] Set LLVM_REQUIRES_EH for Cling
 
 ---
  CMakeLists.txt | 2 ++

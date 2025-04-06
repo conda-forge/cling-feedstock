@@ -23,6 +23,13 @@ source:
     - patches/0006-Set-LLVM_REQUIRES_EH-for-Cling.patch
     # avoid picking up llvmdir from cross-compilation build environment
     - patches/0007-don-t-use-stale-llvmdir.patch            # [build_platform != target_platform]
+    # backport some relevant commits for aarch, see https://github.com/root-project/cling/issues/550
+    # (plus a dependent prior commit)
+    - patches/0008-Backport-jitlink-ppc64-13850.patch
+    # https://github.com/root-project/cling/commit/e129657b8e7ee175b5df29751fc7eec064492ef9
+    - patches/0009-Fix-weak-hidden-symbols-on-AArch64.patch
+    # https://github.com/root-project/cling/commit/1b1f9296ae7873582c2aae21c6398d9dcfa960e2
+    - patches/0010-Enable-JITLink-by-default-for-AArch64-on-Linux.patch
 
 build:
   number: {{ build_number }}

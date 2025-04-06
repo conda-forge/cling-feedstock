@@ -1,7 +1,7 @@
 From b2c11036bd46773fd0ec7fdf0cfc6201486e98eb Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Tue, 18 Mar 2025 12:25:13 +1100
-Subject: [PATCH 7/7] don't use stale llvmdir
+Subject: [PATCH 07/10] don't use stale llvmdir
 
 ---
  lib/Interpreter/CIFactory.cpp | 8 --------
