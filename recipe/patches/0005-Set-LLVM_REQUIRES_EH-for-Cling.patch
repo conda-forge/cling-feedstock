@@ -1,0 +1,22 @@
+From 7ebf6797627967c87eb3e793bc8f737eebd9cd1d Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Mon, 19 Apr 2021 15:23:24 +0200
+Subject: [PATCH 5/7] Set LLVM_REQUIRES_EH for Cling
+
+---
+ CMakeLists.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 21ad6b4d..5ddaea04 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,6 +29,8 @@ if( CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR )
+     NO_DEFAULT_PATH)
+ 
+   list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
++  set(LLVM_REQUIRES_EH ON)
++
+   include(AddLLVM)
+   include(TableGen)
+   include(HandleLLVMOptions)

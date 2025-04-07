@@ -14,22 +14,17 @@ source:
     - patches/0001-Export-all-symbols-on-windows.patch
     # Do not build Jupyter kernel - use xeus-cling instead
     - patches/0002-remove-jupyter.patch
-    - patches/0003-conda-packaging.patch
     # Prevent setting sysroot include directory on OS X
-    - patches/0004-Drop-compile-time-sysroot.patch
+    - patches/0003-Drop-compile-time-sysroot.patch
     # Enable redefinitions
-    - patches/0005-enable-redefinition-allowed.patch
+    - patches/0004-enable-redefinition-allowed.patch
     # LLVM_REQUIES_EH
-    - patches/0006-Set-LLVM_REQUIRES_EH-for-Cling.patch
-    # avoid picking up llvmdir from cross-compilation build environment
-    - patches/0007-don-t-use-stale-llvmdir.patch            # [build_platform != target_platform]
+    - patches/0005-Set-LLVM_REQUIRES_EH-for-Cling.patch
     # backport some relevant commits for aarch, see https://github.com/root-project/cling/issues/550
-    # (plus a dependent prior commit)
-    - patches/0008-Backport-jitlink-ppc64-13850.patch
     # https://github.com/root-project/cling/commit/e129657b8e7ee175b5df29751fc7eec064492ef9
-    - patches/0009-Fix-weak-hidden-symbols-on-AArch64.patch
+    - patches/0006-Fix-weak-hidden-symbols-on-AArch64.patch
     # https://github.com/root-project/cling/commit/1b1f9296ae7873582c2aae21c6398d9dcfa960e2
-    - patches/0010-Enable-JITLink-by-default-for-AArch64-on-Linux.patch
+    - patches/0007-Enable-JITLink-by-default-for-AArch64-on-Linux.patch
 
 build:
   number: {{ build_number }}
